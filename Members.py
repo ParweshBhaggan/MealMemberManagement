@@ -14,22 +14,24 @@
 
 from datetime import date
 
+import Unique_Generator # type: ignore
+
 
 class Member:
-    def __init__(self, firstname, lastname):
+    def __init__(self, firstname, lastname, age, gender, weight, adress, city, email, mobile, username, password):
+        self.ID = Unique_Generator.generate()
         self.firstname = firstname
         self.lastname = lastname
         self.registrationdate = date.today()
-        self.age = 30
-        self.gender = 'M'
-        self.weight = 50.23
-        self.adress = 'Verlengde singelstraat 01 2613EW'
-        self.city = ['AMS', 'DELFT', 'ROTT', 'DENHAAG']
-        self.email = firstname + lastname + '@hotmail.com'
-        self.mobile = +31612615703
-        self.username = firstname + ' ' + lastname
-        self.password = 1234
+        self.age = age
+        self.gender = gender
+        self.weight = weight
+        self.adress = adress
+        self.email = email
+        self.mobile = mobile
+        self.username = username
+        self.password = password
 
-member = Member('Roderick','Wilson')
+member = Member('Roderick','Wilson', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username', 'password')
 
-print(member.firstname, member.lastname, member.username, member.password, member.registrationdate, member.age, member.adress, member.city[1], member.mobile)
+print(member.ID, member.firstname, member.lastname, member.username, member.password, member.registrationdate, member.age, member.gender, member.weight, member.adress, member.mobile)

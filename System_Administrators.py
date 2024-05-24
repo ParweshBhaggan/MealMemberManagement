@@ -4,14 +4,14 @@ from datetime import date
 
 
 class SystemAdmin:
-    def __init__(self, firstname, lastname):
+    def __init__(self, firstname, lastname, username, password):
         self.firstname = firstname
         self.lastname = lastname
         self.registrationdate = date.today()
-        self.username = firstname + ' ' + lastname
-        self.password = 1234
+        self.username = username
+        self.password = password
 
-systemadmin = SystemAdmin('Roderick','Wilson')
+systemadmin = SystemAdmin('Roderick','Wilson', 'admin', 'admin')
 
 print(systemadmin.firstname, systemadmin.lastname, systemadmin.username, systemadmin.password, systemadmin.registrationdate)
 
