@@ -9,4 +9,4 @@ def generate():
     membership_id = int(random9digits + str(checksum))
     return membership_id
 
-print(generate())
+#print(generate())
