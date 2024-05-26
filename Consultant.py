@@ -50,7 +50,7 @@ class Consultant:
         for member in self.members:
             print(member.firstname, member.lastname, member.username, member.password, type(member))
 
-consultant = Consultant('Rode','Willy', 'consultant', 'password')
+"""consultant = Consultant('Rode','Willy', 'consultant', 'password')
 print('Consultant: ', consultant.firstname, consultant.lastname, consultant.username, consultant.password, consultant.registrationdate)
 
 consultant.updatePassword('newpassword')
@@ -68,4 +68,4 @@ consultant.checkUsers()
 member3 = Member('Test3','Member3', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email3@hotmail.com', +31633333333, 'username2', 'password')
 consultant.updateMember(member3)
 
-consultant.searchMember('username2')
+consultant.searchMember('username2')"""
