@@ -18,22 +18,22 @@ class Consultant:
 
     
 
-consultant = Consultant('Rode','Willy', 'consultant', 'password')
-print('Consultant: ', consultant.firstname, consultant.lastname, consultant.username, consultant.password, consultant.registrationdate)
+# consultant = Consultant('Rode','Willy', 'consultant', 'password')
+# print('Consultant: ', consultant.firstname, consultant.lastname, consultant.username, consultant.password, consultant.registrationdate)
 
-consultant.services.updatePassword(consultant,'newpassword')
+# consultant.services.updatePassword(consultant,'newpassword')
 
-member = Member('Roderick','Wilson', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username', 'password')
-member1 = Member('Test1','Member', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username1', 'password')
-member2 = Member('Test2','Member', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username2', 'password')
+# member = Member('Roderick','Wilson', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username', 'password')
+# member1 = Member('Test1','Member', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username1', 'password')
+# member2 = Member('Test2','Member', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username2', 'password')
 
-consultant.services.addMember(member)
-consultant.services.addMember(member1)
-consultant.services.addMember(member2)
+# consultant.services.addMember(member)
+# consultant.services.addMember(member1)
+# consultant.services.addMember(member2)
 
-consultant.services.checkUsers()
+# consultant.services.checkUsers()
 
-member3 = Member('Test3','Member3', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email3@hotmail.com', +31633333333, 'username2', 'password')
-consultant.services.updateMember(member3)
+# member3 = Member('Test3','Member3', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email3@hotmail.com', +31633333333, 'username2', 'password')
+# consultant.services.updateMember(member3)
 
-consultant.services.searchMember('username2')
+# consultant.services.searchMember('username2')

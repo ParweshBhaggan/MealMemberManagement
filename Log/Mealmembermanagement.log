@@ -1,0 +1,42 @@
+2024-05-30 19:50:30 - Updated password for User: super_admin, old password: Admin_123? to new password: newpassword
+2024-05-30 19:50:30 - Created SystemAdmin: Rode Wilson with username: admin
+2024-05-30 19:50:30 - Created SystemAdmin: Roderick Wil with username: admin1
+2024-05-30 19:50:30 - Created SystemAdmin: Roder Wils with username: admin2
+2024-05-30 19:50:30 - Added administrator Rode Wilson with username: admin
+2024-05-30 19:50:30 - Added administrator Roderick Wil with username: admin1
+2024-05-30 19:50:30 - Added administrator Roder Wils with username: admin2
+2024-05-30 19:50:30 - Cheking users...
+2024-05-30 19:50:30 - ('Rode', 'Wilson', 'admin', 'adminpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Roderick', 'Wil', 'admin1', 'adminpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Roder', 'Wils', 'admin2', 'adminpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - Deleted administrator Roderick Wil with username: admin1
+2024-05-30 19:50:30 - Reset password for administrator Roder Wils with username: admin2, old password: adminpassword to new password: newpassword
+2024-05-30 19:50:30 - Created SystemAdmin: Test3 Admin3 with username: admin
+2024-05-30 19:50:30 - Updated administrator Test3 Admin3 with username: admin
+2024-05-30 19:50:30 - Added consultant Test Consultant with username: consultant
+2024-05-30 19:50:30 - Added consultant Test1 Consultant with username: consultant1
+2024-05-30 19:50:30 - Added consultant Test2 Consultant with username: consultant2
+2024-05-30 19:50:30 - Cheking users...
+2024-05-30 19:50:30 - ('Test3', 'Admin3', 'admin', 'adminpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Roder', 'Wils', 'admin2', 'newpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Test', 'Consultant', 'consultant', 'password', <class 'Consultant.Consultant'>)
+2024-05-30 19:50:30 - ('Test1', 'Consultant', 'consultant1', 'password', <class 'Consultant.Consultant'>)
+2024-05-30 19:50:30 - ('Test2', 'Consultant', 'consultant2', 'password', <class 'Consultant.Consultant'>)
+2024-05-30 19:50:30 - Deleted consultant Test1 Consultant with username: consultant1
+2024-05-30 19:50:30 - Reset password for consultant Test2 Consultant with username: consultant2, old password: password to new password: newpassword
+2024-05-30 19:50:30 - Updated consultant Test3 Consultant3 with username: consultant
+2024-05-30 19:50:30 - Added member Roderick Wilson with username: username ID: 2427144408
+2024-05-30 19:50:30 - Added member Test1 Member with username: username1 ID: 2459011697
+2024-05-30 19:50:30 - Added member Test2 Member with username: username2 ID: 2482495206
+2024-05-30 19:50:30 - Cheking users...
+2024-05-30 19:50:30 - ('Test3', 'Admin3', 'admin', 'adminpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Roder', 'Wils', 'admin2', 'newpassword', <class 'System_Administrators.SystemAdmin'>)
+2024-05-30 19:50:30 - ('Test3', 'Consultant3', 'consultant', 'password', <class 'Consultant.Consultant'>)
+2024-05-30 19:50:30 - ('Test2', 'Consultant', 'consultant2', 'newpassword', <class 'Consultant.Consultant'>)
+2024-05-30 19:50:30 - (2427144408, 'Roderick', 'Wilson', 'username', 'password', datetime.date(2024, 5, 30), 30, 'M', 61.4, 'Streetname housenumber zipcode City', 31612345678)
+2024-05-30 19:50:30 - (2459011697, 'Test1', 'Member', 'username1', 'password', datetime.date(2024, 5, 30), 30, 'M', 61.4, 'Streetname housenumber zipcode City', 31612345678)
+2024-05-30 19:50:30 - (2482495206, 'Test2', 'Member', 'username2', 'password', datetime.date(2024, 5, 30), 30, 'M', 61.4, 'Streetname housenumber zipcode City', 31612345678)
+2024-05-30 19:50:30 - Deleted member Test1 Member with username: username1 ID: 2459011697
+2024-05-30 19:50:30 - Reset password for member Test2 Member with username: username2 ID: 2482495206, old password: password to new password: newpassword
+2024-05-30 19:50:30 - Updated member Test3 Member3 with username: username2 ID: 2482495206
+2024-05-30 19:50:30 - Searched for member (2482495206, 'Test3', 'Member3', 'username2', 'newpassword', datetime.date(2024, 5, 30), 30, 'M', 61.4, 'Streetname housenumber zipcode City', 31633333333)
