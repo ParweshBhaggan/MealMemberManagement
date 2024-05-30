@@ -1,0 +1,3 @@
+def Generator():
+    print()
+
