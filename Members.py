@@ -31,7 +31,3 @@ class Member:
         self.mobile = mobile
         self.username = username
         self.password = password
-
-member = Member('Roderick','Wilson', 30, 'M', 61.4, 'Streetname housenumber zipcode City', 'email@hotmail.com', +31612345678, 'username', 'password')
-
-#print(member.ID, member.firstname, member.lastname, member.username, member.password, member.registrationdate, member.age, member.gender, member.weight, member.adress, member.mobile)
