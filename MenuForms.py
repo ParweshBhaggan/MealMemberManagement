@@ -1,3 +1,4 @@
+from User import*
 from Members import Member
 
 
@@ -10,6 +11,15 @@ class MenuForms:
         lastname = input("Enter Lastname: \n")
         username = input("Enter Username: \n")
         password = input("Enter Password: \n")
+        
+        name = user.__class__.__name__
+        if(name == "SystemAdmin"):
+            user = SystemAdmin(firstname, lastname, username, password)
+            
+        elif(name == "Consultant"):
+            user = Consultant(firstname, lastname, username, password)
+            
+        print(user.__class__.__name__)
 
         
 
