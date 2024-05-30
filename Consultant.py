@@ -2,7 +2,6 @@
 #Their profiles contain only first name, last name, and registration date.
 from datetime import date
 
-from Members import Member
 from UserServices import UserServices
 
 

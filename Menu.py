@@ -1,12 +1,56 @@
+import time
 import os
+
+from Consultant import Consultant
+from Logger import logViewer
+from Super_Administrator import SuperAdmin
+from System_Administrators import SystemAdmin
+
+administrators = [
+    SystemAdmin('Rode','Wilson', 'admin', 'admin'),
+    SystemAdmin('Roderick','Wil', 'admin1', 'admin'),
+    SystemAdmin('Roder','Wils', 'admin2', 'admin')
+]
+consultants = [
+    Consultant('Test','Consultant', 'consultant', 'password'),
+    Consultant('Test1','Consultant', 'consultant1', 'password'),
+    Consultant('Test2','Consultant', 'consultant2', 'password')
+]
 
 def LoginMenu():
     username = input("Enter username: ")
     password = input("Enter password: ")
 
-    if(username != "" and password != ""):
-        #login
-        ConsoleSafety(HomeMenu)
+    if username and password:
+        user_found = False
+        if SuperAdmin.username == username and SuperAdmin.password == password:
+            print("Login successful as Super Admin")
+            user_found = True
+            time.sleep(5)
+            #login
+            ConsoleSafety(HomeMenu)
+        
+        for admin in administrators:
+            if admin.username == username and admin.password == password:
+                print("\nLogin successful as Administrator")
+                user_found = True
+                time.sleep(5)
+                ConsoleSafety(HomeMenu)
+                break
+        
+        for consultant in consultants:
+            if consultant.username == username and consultant.password == password:
+                print("\nLogin successful as Consultant")
+                user_found = True
+                time.sleep(5)
+                ConsoleSafety(HomeMenu)
+                break
+
+        if not user_found:
+            print("Invalid username or password. Please try again.")
+    else:
+        print("Username and password cannot be empty.")
+
         
 def HomeMenu():
     print("Home menu")
@@ -104,7 +148,7 @@ def CreateBackUp():
 def RetrieveBackup():
     return
 def SearchLog():
-    return
+    logViewer()
 def LogOut():
     return
 
@@ -123,4 +167,4 @@ def ConsoleSafety(func):
         print("===Retry!===")
         func()
 
-ConsoleSafety(LoginMenu)    
+ConsoleSafety(LoginMenu)

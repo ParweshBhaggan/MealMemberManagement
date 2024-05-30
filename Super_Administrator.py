@@ -1,14 +1,10 @@
-from Consultant import Consultant
-from Logger import logViewer
-from Members import Member
-from System_Administrators import SystemAdmin
 from UserServices import UserServices
 
 
 class SuperAdmin:
     services = UserServices()
-    username = 'super_admin'
-    password = 'Admin_123?'
+    username = 'superadmin'#'super_admin'
+    password = 'admin123'#'Admin_123?'
 
 # superadmin = SuperAdmin()
 

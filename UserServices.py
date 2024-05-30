@@ -1,4 +1,3 @@
-from datetime import date
 from Logger import log
 
 
@@ -6,7 +5,7 @@ class UserServices:
     consultants = list()
     members = list()
     administrators = list()
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     def updatePassword(self,user, newpassword):

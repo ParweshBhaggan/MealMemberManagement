@@ -1,9 +1,7 @@
 #consultants and system admins should have profiles, in addition to their usernames and passwords.
 #Their profiles contain only first name, last name, and registration date.
 from datetime import date
-from Consultant import Consultant
-from Logger import log,logViewer
-from Members import Member
+from Logger import log
 from UserServices import UserServices
 
 """
