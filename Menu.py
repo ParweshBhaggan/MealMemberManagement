@@ -1,4 +1,8 @@
 import os
+from User import*
+from MenuForms import MenuForms
+
+menuForm = MenuForms()
 
 def LoginMenu():
     username = input("Enter username: ")
@@ -84,6 +88,8 @@ def DeleteMember():
 def SearchUser():
     return
 def AddConsultant():
+    consultant = Consultant()
+    menuForm.UserForm(consultant)
     return
 def UpdateConsultant():
     return
@@ -92,6 +98,8 @@ def ResetConsultant():
 def DeleteConsultant():
     return
 def AddAdmin():
+    systemAdmin = SystemAdmin()
+    menuForm.UserForm(systemAdmin)
     return
 def UpdateAdmin():
     return
