@@ -2,13 +2,11 @@ import time
 import os
 from User import*
 from MenuForms import MenuForms
+from Logger import logViewer
+
+
 
 menuForm = MenuForms()
-
-from Consultant import Consultant
-from Logger import logViewer
-from Super_Administrator import SuperAdmin
-from System_Administrators import SystemAdmin
 
 administrators = [
     SystemAdmin('Rode','Wilson', 'admin', 'admin'),
