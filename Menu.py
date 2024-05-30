@@ -8,7 +8,6 @@ def LoginMenu():
         #login
         ConsoleSafety(HomeMenu)
         
-
 def HomeMenu():
     print("Home menu")
     print("1. Search member")
@@ -30,39 +29,49 @@ def HomeMenu():
     print("17. Log out")
     print("--------------------------------------------------------------------\n")
     
-
     try:
         choice = int(input("Enter option: "))
-
     except Exception as e:
         print("Invalid option")
         HomeMenu()
-
-
-    match(choice):
-        case 1: SearchMember()
-        case 2: AddMember()
-        case 3: UpdateMember()
-        case 4: DeleteMember()
-        case 5: SearchUser()
-        case 6: AddConsultant()
-        case 7: UpdateConsultant()
-        case 8: ResetConsultant()
-        case 9: DeleteConsultant()
-        case 10: AddAdmin()
-        case 11: UpdateAdmin()
-        case 12: ResetAdmin()
-        case 13: DeleteAdmin()
-        case 14: CreateBackUp()
-        case 15: RetrieveBackup
-        case 16: SearchLog()
-        case 17: LogOut()
+        return  # Return to stop further execution
     
-    if(choice <= 0 or choice > 17):
+    if choice == 1:
+        SearchMember()
+    elif choice == 2:
+        AddMember()
+    elif choice == 3:
+        UpdateMember()
+    elif choice == 4:
+        DeleteMember()
+    elif choice == 5:
+        SearchUser()
+    elif choice == 6:
+        AddConsultant()
+    elif choice == 7:
+        UpdateConsultant()
+    elif choice == 8:
+        ResetConsultant()
+    elif choice == 9:
+        DeleteConsultant()
+    elif choice == 10:
+        AddAdmin()
+    elif choice == 11:
+        UpdateAdmin()
+    elif choice == 12:
+        ResetAdmin()
+    elif choice == 13:
+        DeleteAdmin()
+    elif choice == 14:
+        CreateBackUp()
+    elif choice == 15:
+        RetrieveBackup()
+    elif choice == 16:
+        SearchLog()
+    elif choice == 17:
+        LogOut()
+    else:
         HomeMenu()
-       
-
-
 
 def SearchMember():
     return
