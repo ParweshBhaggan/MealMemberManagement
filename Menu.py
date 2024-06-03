@@ -3,51 +3,34 @@ import os
 from User import*
 from MenuForms import MenuForms
 from Logger import logViewer
-
-
+from rodeDatabase import loginUser
 
 menuForm = MenuForms()
 
-administrators = [
-    SystemAdmin('Rode','Wilson', 'admin', 'admin'),
-    SystemAdmin('Roderick','Wil', 'admin1', 'admin'),
-    SystemAdmin('Roder','Wils', 'admin2', 'admin')
-]
-consultants = [
-    Consultant('Test','Consultant', 'consultant', 'password'),
-    Consultant('Test1','Consultant', 'consultant1', 'password'),
-    Consultant('Test2','Consultant', 'consultant2', 'password')
-]
+logged_in_user = None
 
 def LoginMenu():
+    global logged_in_user
     username = input("Enter username: ")
     password = input("Enter password: ")
 
     if username and password:
-        user_found = False
-        if SuperAdmin.username == username and SuperAdmin.password == password:
-            print("Login successful as Super Admin")
-            user_found = True
+        user_found, logged_in_user, user_type = loginUser(username, password)
+        if user_type == "SuperAdmin":
+            print("\nLogin successful as Super Admin")
             time.sleep(5)
-            #login
             ConsoleSafety(HomeMenu)
         
-        for admin in administrators:
-            if admin.username == username and admin.password == password:
-                print("\nLogin successful as Administrator")
-                user_found = True
-                time.sleep(5)
-                ConsoleSafety(HomeMenu)
-                break
-        
-        for consultant in consultants:
-            if consultant.username == username and consultant.password == password:
-                print("\nLogin successful as Consultant")
-                user_found = True
-                time.sleep(5)
-                ConsoleSafety(HomeMenu)
-                break
+        if user_type == "SystemAdmin":
+            print(f"\nLogin successful as Administrator: {logged_in_user[3]}")
+            time.sleep(5)
+            ConsoleSafety(HomeMenu)
 
+        if user_type == "Consultant":
+            print(f"\nLogin successful as Consultant: {logged_in_user[3]}")
+            time.sleep(5)
+            ConsoleSafety(HomeMenu)
+        # print(user_type)
         if not user_found:
             print("Invalid username or password. Please try again.")
     else:
@@ -156,7 +139,10 @@ def RetrieveBackup():
 def SearchLog():
     logViewer()
 def LogOut():
-    return
+    global logged_in_user
+    logged_in_user = None
+    ConsoleSafety(LoginMenu)
+    return 
 
 def ClearConsole():
     if os.name == 'nt':
