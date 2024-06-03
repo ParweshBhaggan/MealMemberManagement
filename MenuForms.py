@@ -1,5 +1,6 @@
 from User import*
 from Members import Member
+from rodeDatabase import createConsultant, createSystemAdmin
 
 
 class MenuForms:
@@ -15,9 +16,10 @@ class MenuForms:
         name = user.__class__.__name__
         if(name == "SystemAdmin"):
             user = SystemAdmin(firstname, lastname, username, password)
-            
+            createSystemAdmin(user)
         elif(name == "Consultant"):
             user = Consultant(firstname, lastname, username, password)
+            createConsultant(user)
             
         print(user.__class__.__name__)
 
@@ -33,8 +35,6 @@ class MenuForms:
         address = input("Enter Address: \n")
         email = input("Enter Email: \n")
         mobile = input("Enter Mobile: \n")
-        username = input("Enter Username: \n")
-        password = input("Enter Password: \n")
 
-        member = Member(firstname, lastname, age, gender, weight, address, email, mobile, username, password)
+        member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
         
