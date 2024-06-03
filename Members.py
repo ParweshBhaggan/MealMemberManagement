@@ -18,8 +18,8 @@ import Unique_Generator # type: ignore
 
 
 class Member:
-    def __init__(self, firstname, lastname, age, gender, weight, adress, email, mobile, username, password):
-        self.ID = Unique_Generator.generate()
+    def __init__(self, firstname, lastname, age, gender, weight, adress, email, mobile):
+        self.membershipID = Unique_Generator.generate()
         self.firstname = firstname
         self.lastname = lastname
         self.registrationdate = date.today()
@@ -29,5 +29,3 @@ class Member:
         self.adress = adress
         self.email = email
         self.mobile = mobile
-        self.username = username
-        self.password = password
