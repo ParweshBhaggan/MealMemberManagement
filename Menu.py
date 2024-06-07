@@ -59,6 +59,10 @@ class MenuFunctions:
         logged_in_user.services.AddMember(member)
         return
 
+    def UpdateCurrentPassword(self):
+        newPass = self.menuForm.UpdatePasswordForm()
+        logged_in_user.services.UpdatePassword(newPass)
+
     def UpdateMember(self):
         member = self.SearchMember()
         updateMember = self.menuForm.UpdateMemberForm(member)
