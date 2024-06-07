@@ -362,16 +362,7 @@ if(isUserLoggedIn):
             
         if logged_in_user.typeUser == "SystemAdmin":
             menu.ViewSystemAdminMenu()
-            
+
         if logged_in_user.typeUser == "SuperAdmin":
             menu.ViewSuperAdminMenu()
             
-
-            
-
-
-
-            
-    
-        
-
