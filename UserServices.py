@@ -22,9 +22,8 @@ class UserServices:
         log(self.user.username, f'User: {admin.typeUser} is deleted.', f'User: "{admin.username}" is deleted')
 
     def UpdateAdmin(self, admin, id):
-        # Moet nog verandert worden
         self.databaseManager.updateSystemAdmin(admin, id)
-        #log(f'Updated administrator {adm.firstname} {adm.lastname} with username: {adm.username}')
+        log(self.user.username, f'User: {admin.typeUser} is updated.', f'User: "{admin.username}"')
     
     def ResetAdminPassword(self,admin):
         self.databaseManager.resetSystemAdminPassword(admin)
@@ -38,10 +37,10 @@ class UserServices:
         self.databaseManager.deleteConsultant(consultant)
         log(self.user.username, f'User: {consultant.typeUser} is deleted.', f'User: "{consultant.username}" is deleted')
     
-    # Moet nog verandert worden
     def UpdateConsultant(self, consultant, id):
         self.databaseManager.updateConsultant(consultant, id)
-        # log(f'Updated consultant {con.firstname} {con.lastname} with username: {con.username}')
+        log(self.user.username, f'User: {consultant.typeUser} is updated.', f'User: "{consultant.username}"')
+
 
     def ResetConsultantPassword(self, consultant):
         self.databaseManager.resetConsultantPassword(consultant)
@@ -58,10 +57,9 @@ class UserServices:
         self.databaseManager.deleteMember(member)
         log(self.user.username, f'User: Member is deleted.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname} is deleted')
 
-    # Moet nog verandert worden
     def UpdateMember(self, member):
         self.databaseManager.updateMember(member)
-        # log(f'Updated member {mem.firstname} {mem.lastname} with username: {mem.username} ID: {mem.ID}')
+        log(self.user.username, f'User: Member is updated.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname} is updated')
     
     def SearchMembersRecursive(self, members, searchVal, foundMember=[], itemIndex=0):
         if itemIndex >= len(members):
