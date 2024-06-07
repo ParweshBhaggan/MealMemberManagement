@@ -139,3 +139,7 @@ class MenuForms:
         member.mobile = mobile
 
         return member
+    
+    def UpdatePasswordForm(self):
+        newPassword = input("Enter new password: \n")
+        return newPassword
