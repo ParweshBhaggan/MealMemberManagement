@@ -1,7 +1,7 @@
 import time
 import os
-from User import*
 from MenuForms import MenuForms
+<<<<<<< HEAD
 from Logger import logViewer
 
 
@@ -19,11 +19,22 @@ consultants = [
     Consultant('Test2','Consultant', 'consultant2', 'password')
 ]
 
+=======
+from Logger import log, logViewer
+from User import Consultant, SystemAdmin, SuperAdmin
+from rodeDatabase import DatabaseManager
+
+menuForm = MenuForms()
+logged_in_user = None
+dbMan = DatabaseManager()
+>>>>>>> de25cdf4061096adabbb51af08895b960367b926
 def LoginMenu():
+    global logged_in_user, menuForm
     username = input("Enter username: ")
     password = input("Enter password: ")
 
     if username and password:
+<<<<<<< HEAD
         user_found = False
         if SuperAdmin.username == username and SuperAdmin.password == password:
             print("Login successful as Super Admin")
@@ -50,6 +61,30 @@ def LoginMenu():
 
         if not user_found:
             print("Invalid username or password. Please try again.")
+=======
+        user_found, logged_in_user = dbMan.loginUser(username, password)
+        
+        if not user_found:
+            print("Invalid username or password. Please try again.")
+        else:
+            if logged_in_user.typeUser == "SuperAdmin":
+                print("\nLogin successful as Super Admin")
+                log("Super Admin","Logged in")
+                time.sleep(2)
+                ConsoleSafety(HomeMenu)
+            
+            if logged_in_user.typeUser == "SystemAdmin":
+                print(f"\nLogin successful as Administrator: {logged_in_user.username}")
+                log(logged_in_user.username,"Logged in")
+                time.sleep(2)
+                ConsoleSafety(HomeMenu)
+
+            if logged_in_user.typeUser == "Consultant":
+                print(f"\nLogin successful as Consultant: {logged_in_user.username}")
+                log(logged_in_user.username,"Logged in")
+                time.sleep(2)
+                ConsoleSafety(HomeMenu)
+>>>>>>> de25cdf4061096adabbb51af08895b960367b926
     else:
         print("Username and password cannot be empty.")
 
@@ -120,34 +155,77 @@ def HomeMenu():
         HomeMenu()
 
 def SearchMember():
-    return
+    searchTerm = menuForm.SearchTermForm()
+    listMembers = logged_in_user.services.GetallMembers()
+    foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
+    selectedMember = menuForm.SelectUserForm(foundMembers)
+    return selectedMember
 def AddMember():
+    member = menuForm.MemberForm()
+    logged_in_user.services.AddMember(member)
     return
 def UpdateMember():
+    member = SearchMember()
+    updateMember = menuForm.UpdateMemberForm(member)
+    logged_in_user.services.UpdateMember(updateMember)
     return
 def DeleteMember():
+    member = SearchMember()
+    if menuForm.DeleteUserForm(member):
+        logged_in_user.services.DeleteMember(member)
+        print(f"Member: {member.firstname} {member.lastname} deleted")
     return
 def SearchUser():
-    return
+    searchTerm = menuForm.SearchTermForm()
+    listUsers = logged_in_user.services.GetAllUsers()
+    foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
+    selectedUser = menuForm.SelectUserForm(foundUsers)
+    return selectedUser
 def AddConsultant():
-    consultant = Consultant()
-    menuForm.UserForm(consultant)
+    consultant = menuForm.UserForm(Consultant())
+    logged_in_user.services.AddConsultant(consultant)
     return
 def UpdateConsultant():
+    consultant = SearchUser()
+    updateConId = logged_in_user.services.GetConsultantId(consultant)
+    updatecons = menuForm.UpdateConsultantForm(consultant)
+    logged_in_user.services.UpdateConsultant(updatecons, updateConId)
     return
 def ResetConsultant():
+    # deze search nog beide users maar kan alleen consultant verwijderen
+    consultant = SearchUser()
+    resetcon = menuForm.ResetConsultantForm(consultant)
+    logged_in_user.services.ResetConsultantPassword(resetcon)
     return
 def DeleteConsultant():
+    # deze search nog beide users maar kan alleen consultant verwijderen
+    consultant = SearchUser()
+    if menuForm.DeleteUserForm(consultant):
+        logged_in_user.services.DeleteConsultant(consultant)
+        print(f"{consultant.typeUser}: {consultant.username} deleted")
     return
 def AddAdmin():
-    systemAdmin = SystemAdmin()
-    menuForm.UserForm(systemAdmin)
+    systemAdmin = menuForm.UserForm(SystemAdmin())
+    logged_in_user.services.AddAdmin(systemAdmin)
     return
 def UpdateAdmin():
+    systemadmin = SearchUser()
+    updateAdminId = logged_in_user.services.GetSystemAdminId(systemadmin)
+    updateadmin = menuForm.UpdateAdminForm(systemadmin)
+    print(updateAdminId)
+    logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
     return
 def ResetAdmin():
+    systemAdmin = SearchUser()
+    resetadmin = menuForm.ResetAdminForm(systemAdmin)
+    logged_in_user.services.ResetAdminPassword(resetadmin)
     return
 def DeleteAdmin():
+    # deze search nog beide users maar kan alleen system admin verwijderen
+    systemAdmin = SearchUser()
+    if menuForm.DeleteUserForm(systemAdmin):
+        logged_in_user.services.DeleteAdmin(systemAdmin)
+        print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
     return
 def CreateBackUp():
     return
@@ -156,6 +234,9 @@ def RetrieveBackup():
 def SearchLog():
     logViewer()
 def LogOut():
+    global logged_in_user
+    logged_in_user = None
+    ConsoleSafety(LoginMenu)
     return
 
 def ClearConsole():
@@ -174,3 +255,7 @@ def ConsoleSafety(func):
         func()
 
 ConsoleSafety(LoginMenu)
+<<<<<<< HEAD
+=======
+
+>>>>>>> de25cdf4061096adabbb51af08895b960367b926
