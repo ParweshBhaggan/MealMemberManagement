@@ -18,6 +18,7 @@ def LoginMenu():
         
         if not user_found:
             print("Invalid username or password. Please try again.")
+            log()
         else:
             isUserLoggedIn = True
             if logged_in_user.typeUser == "SuperAdmin":
@@ -50,7 +51,7 @@ class MenuFunctions:
     def SearchMember(self):
         searchTerm = self.menuForm.SearchTermForm()
         listMembers = logged_in_user.services.GetallMembers()
-        foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
+        foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm, [])# ik heb [] dit gedaan want in de while loop word foundMembers bijgevuld
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
         return selectedMember
 
@@ -79,7 +80,7 @@ class MenuFunctions:
     def SearchUser(self):
         searchTerm = self.menuForm.SearchTermForm()
         listUsers = logged_in_user.services.GetAllUsers()
-        foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
+        foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm, []) # ik heb [] dit gedaan want in de while loop word foundUsers bijgevuld
         selectedUser = self.menuForm.SelectUserForm(foundUsers)
         return selectedUser
 
@@ -147,6 +148,7 @@ class MenuFunctions:
     def LogOut(self):
         global logged_in_user
         logged_in_user = None
+        LoginMenu()
         #ConsoleSafety(LoginMenu)
         return
 
