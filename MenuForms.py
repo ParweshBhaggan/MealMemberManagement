@@ -1,6 +1,7 @@
 
-from User import Consultant, SuperAdmin, SystemAdmin
+from User import Consultant, SuperAdmin, SystemAdmin, User
 from Members import Member
+from UserServices import UserServices
 from Validation import Validators
 from termcolor import colored
 import random
@@ -9,6 +10,7 @@ class MenuForms:
     def __init__(self) -> None:
         self.validator = Validators()
         self.adressform = AddressForm()
+        self.services = UserServices(User())
 
     def UserForm(self, user):
         firstname = input("Enter Firstname: \n")
@@ -54,15 +56,13 @@ class MenuForms:
         address = self.adressform.GetAdress()
 
         email = input("Enter Email: \n")
-        while not self.validator.check_valid_email(email):
-            print("Invalid email format.")
+        while not self.validator.check_valid_email(email) or self.services.CheckMemberEmail(email):
             email = input("Enter Email again: \n")
 
-        mobile = input("Enter Mobile without '+316': \n")
-        while not self.validator.create_phone_numer(mobile):
-            print("Invalid mobile phone number. Mobile phone number must be 8 digits long.")
-            mobile = input("Enter Mobile again without '+316': \n")
-
+        mobile = "+31-6-" + input("Enter Mobile without '+316': \n")
+        while not self.validator.ValidateNumber(mobile) or self.services.CheckMemberMobile(mobile):
+            mobile = "+31-6-" + input("Enter Mobile again without '+316': \n")
+        
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
         print(colored('New member successfully added.', 'green'))
         return member
