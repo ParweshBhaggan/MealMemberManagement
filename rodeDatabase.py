@@ -278,6 +278,7 @@ class  DatabaseManager:
 
         if user:
             loggedInUser = SystemAdmin(user[1], user[2], user[3], user[4])
+            loggedInUser.registrationdate = user[5]
             
             con.close()
             return True, loggedInUser
@@ -289,6 +290,7 @@ class  DatabaseManager:
 
         if user:
             loggedInUser = Consultant(user[1], user[2], user[3], user[4])
+            loggedInUser.registrationdate = user[5]
             return True, loggedInUser
         else:
             return False, None

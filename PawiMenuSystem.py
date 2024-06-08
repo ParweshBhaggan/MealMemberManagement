@@ -1,136 +1,110 @@
-import time
-from Logger import log
 from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
-from rodeDatabase import DatabaseManager
 
-
-logged_in_user = None
-isUserLoggedIn = False
-dbMan = DatabaseManager()
-def LoginMenu():
-    global logged_in_user, isUserLoggedIn
-    username = input("Enter username: ")
-    password = input("Enter password: ")
-
-    if username and password:
-        user_found, logged_in_user = dbMan.loginUser(username, password)
-        
-        if not user_found:
-            print("Invalid username or password. Please try again.")
-        else:
-            isUserLoggedIn = True
-            if logged_in_user.typeUser == "SuperAdmin":
-                print("\nLogin successful as Super Admin")
-                log("Super Admin","Logged in")
-                time.sleep(2)
-                #ConsoleSafety(HomeMenu)
-            
-            if logged_in_user.typeUser == "SystemAdmin":
-                print(f"\nLogin successful as Administrator: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
-                time.sleep(2)
-                #ConsoleSafety(HomeMenu)
-
-            if logged_in_user.typeUser == "Consultant":
-                print(f"\nLogin successful as Consultant: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
-                time.sleep(2)
-                #ConsoleSafety(HomeMenu)
-    else:
-        print("Username and password cannot be empty.")
-
-
-
+# consultants and system admins should have profiles, in addition to their usernames and 
+# passwords. Their profiles contain only first name, last name, 
+# and registration date.
 class MenuFunctions:
-    global logged_in_user, dbMan
-    def __init__(self):
+    
+    def __init__(self, logged_in_user):
         self.menuForm = MenuForms()
-        
+        self.logged_in_user = logged_in_user
+
+    def UserProfile(self):
+        if(self.logged_in_user.typeUser == "SuperAdmin"):
+            print(f"Profile:\n{self.logged_in_user.username} \n")    
+        else:
+            print(f"Profile:")
+            print(f"{self.logged_in_user.firstname}")
+            print(f"{self.logged_in_user.lastname}")
+            print(f"{self.logged_in_user.registrationdate}")    
+
+
+
     def SearchMember(self):
         searchTerm = self.menuForm.SearchTermForm()
-        listMembers = logged_in_user.services.GetallMembers()
-        foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
+        listMembers = self.logged_in_user.services.GetallMembers()
+        foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
         return selectedMember
 
     def AddMember(self):
         member = self.menuForm.MemberForm()
-        logged_in_user.services.AddMember(member)
+        self.logged_in_user.services.AddMember(member)
         return
 
     def UpdateMember(self):
         member = self.SearchMember()
         updateMember = self.menuForm.UpdateMemberForm(member)
-        logged_in_user.services.UpdateMember(updateMember)
+        self.logged_in_user.services.UpdateMember(updateMember)
         return
 
     def UpdateCurrentPassword(self):
         newPass = self.menuForm.UpdatePasswordForm()
-        logged_in_user.services.UpdatePassword(newPass)
+        self.logged_in_user.services.UpdatePassword(newPass)
 
     def DeleteMember(self):
         member = self.SearchMember()
         if self.menuForm.DeleteUserForm(member):
-            logged_in_user.services.DeleteMember(member)
+            self.logged_in_user.services.DeleteMember(member)
             print(f"Member: {member.firstname} {member.lastname} deleted")
         return
 
     def SearchUser(self):
         searchTerm = self.menuForm.SearchTermForm()
-        listUsers = logged_in_user.services.GetAllUsers()
-        foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
+        listUsers = self.logged_in_user.services.GetAllUsers()
+        foundUsers = self.logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
         selectedUser = self.menuForm.SelectUserForm(foundUsers)
         return selectedUser
 
     def AddConsultant(self):
         consultant = self.menuForm.UserForm(Consultant())
-        logged_in_user.services.AddConsultant(consultant)
+        self.logged_in_user.services.AddConsultant(consultant)
         return
 
     def UpdateConsultant(self):
         consultant = self.SearchUser()
-        updateConId = logged_in_user.services.GetConsultantId(consultant)
+        updateConId = self.logged_in_user.services.GetConsultantId(consultant)
         updatecons = self.menuForm.UpdateConsultantForm(consultant)
-        logged_in_user.services.UpdateConsultant(updatecons, updateConId)
+        self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
         return
 
     def ResetConsultant(self):
         consultant = self.SearchUser()
         resetcon = self.menuForm.ResetConsultantForm(consultant)
-        logged_in_user.services.ResetConsultantPassword(resetcon)
+        self.logged_in_user.services.ResetConsultantPassword(resetcon)
         return
 
     def DeleteConsultant(self):
         consultant = self.SearchUser()
         if self.menuForm.DeleteUserForm(consultant):
-            logged_in_user.services.DeleteConsultant(consultant)
+            self.logged_in_user.services.DeleteConsultant(consultant)
             print(f"{consultant.typeUser}: {consultant.username} deleted")
         return
 
     def AddAdmin(self):
         systemAdmin = self.menuForm.UserForm(SystemAdmin())
-        logged_in_user.services.AddAdmin(systemAdmin)
+        self.logged_in_user.services.AddAdmin(systemAdmin)
         return
 
     def UpdateAdmin(self):
         systemadmin = self.SearchUser()
-        updateAdminId = logged_in_user.services.GetSystemAdminId(systemadmin)
+        updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemadmin)
         updateadmin = self.menuForm.UpdateAdminForm(systemadmin)
         print(updateAdminId)
-        logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
+        self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
         return
 
     def ResetAdmin(self):
         systemAdmin = self.SearchUser()
         resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
-        logged_in_user.services.ResetAdminPassword(resetadmin)
+        self.logged_in_user.services.ResetAdminPassword(resetadmin)
         return
 
     def DeleteAdmin(self):
         systemAdmin = self.SearchUser()
         if self.menuForm.DeleteUserForm(systemAdmin):
-            logged_in_user.services.DeleteAdmin(systemAdmin)
+            self.logged_in_user.services.DeleteAdmin(systemAdmin)
             print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
         return
 
@@ -144,17 +118,18 @@ class MenuFunctions:
         pass
         #logViewer()
 
-    def LogOut(self):
-        global logged_in_user
-        logged_in_user = None
+    def LogOut(self, isUserLoggedIn):
+        isUserLoggedIn =  False
         #ConsoleSafety(LoginMenu)
-        return
+        return isUserLoggedIn
 
 
-class MenuItem:
-    def __init__(self):
-        self.menuFunctions = MenuFunctions()
+class MenuController:
+    def __init__(self, user):
+        self.user = user
+        self.menuFunctions = MenuFunctions(self.user)
         self.canShowMenu = True
+        self.userLoggedIn = False
     
     consultantMenu = [
         "Search member",
@@ -200,6 +175,7 @@ class MenuItem:
     ]
 
     def CreateMenu(self, arr):
+        self.menuFunctions.UserProfile()
         index = 1
         for item in arr:
             print(str(index) + " " + item)
@@ -236,7 +212,7 @@ class MenuItem:
                     elif selectedOption == 4:
                         self.menuFunctions.UpdateCurrentPassword()
                     elif selectedOption == 5:
-                        self.menuFunctions.LogOut()
+                        self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
                     print("Invalid selection! Retry!")
                     self.ViewConsultantMenu()         
@@ -289,7 +265,7 @@ class MenuItem:
                     elif selectedOption == 13:
                         self.menuFunctions.SearchLog()
                     elif selectedOption == 14:
-                        self.menuFunctions.LogOut()
+                        self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
                     print("Invalid selection! Retry!")
                     self.ViewSystemAdminMenu()  
@@ -348,25 +324,25 @@ class MenuItem:
                     elif selectedOption == 16:
                         self.menuFunctions.SearchLog()
                     elif selectedOption == 17:
-                        self.menuFunctions.LogOut()
+                        self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
                     print("Invalid selection! Retry!")
                     self.ViewSuperAdminMenu()  
 
-menu = MenuItem()
-LoginMenu()
-if(isUserLoggedIn):
+# menu = MenuItem()
+# LoginMenu()
+# if(isUserLoggedIn):
         
-    while(menu.canShowMenu):
-        #menu.ViewConsultantMenu()
-        #menu.ViewSuperAdminMenu()
-        #menu.ViewSystemAdminMenu()
-        if logged_in_user.typeUser == "Consultant":
-            menu.ViewConsultantMenu()
+#     while(menu.canShowMenu):
+#         #menu.ViewConsultantMenu()
+#         #menu.ViewSuperAdminMenu()
+#         #menu.ViewSystemAdminMenu()
+#         if self.logged_in_user.typeUser == "Consultant":
+#             menu.ViewConsultantMenu()
             
-        if logged_in_user.typeUser == "SystemAdmin":
-            menu.ViewSystemAdminMenu()
+#         if self.logged_in_user.typeUser == "SystemAdmin":
+#             menu.ViewSystemAdminMenu()
 
-        if logged_in_user.typeUser == "SuperAdmin":
-            menu.ViewSuperAdminMenu()
+#         if self.logged_in_user.typeUser == "SuperAdmin":
+#             menu.ViewSuperAdminMenu()
             
