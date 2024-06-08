@@ -1,18 +1,30 @@
 
 from User import Consultant, SuperAdmin, SystemAdmin
 from Members import Member
+from Validation import Validators
+from termcolor import colored
 import random
 
 class MenuForms:
     def __init__(self) -> None:
+        self.validator = Validators()
         self.adressform = AddressForm()
 
     def UserForm(self, user):
         firstname = input("Enter Firstname: \n")
         lastname = input("Enter Lastname: \n")
-        username = input("Enter Username: \n")
-        password = input("Enter Password: \n")
         
+        username = input("Enter Username: \n")
+        while not self.validator.valid_username(username):
+            print("Invalid username. Username must be 8-12 characters long and can only contain letters, digits, underscores, apostrophes, and dots.")
+            username = input("Enter Username again: \n")
+
+        password = input("Enter Password: \n")
+        while not self.validator.valid_password(password):
+            print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            password = input("Enter Password again: \n")
+       
+        # Creating the user object based on its type
         name = user.__class__.__name__
         if(name == "SystemAdmin"):
             user = SystemAdmin(firstname, lastname, username, password)
@@ -24,13 +36,35 @@ class MenuForms:
         firstname = input("Enter Firstname: \n")
         lastname = input("Enter Lastname: \n")
         age = int(input("Enter Age: \n"))
-        gender = input("Enter Gender: \n")
+        while not self.validator.check_valid_age(age):
+            print("Invalid age. Age must be a number between 1 and 111.")
+            age = input("Enter Age again: \n")
+
+        gender = input("Enter Gender (options: male, female, other, prefer not to say): \n")
+        while not self.validator.check_valid_gender(gender):
+            print("Invalid gender. Please enter one of the following options: male, female, non-binary, other, prefer not to say.")
+            gender = input("Enter Gender again: \n")
+
+
         weight = float(input("Enter Weight: \n"))
+        while not self.validator.check_valid_weigth(weight):
+            print("Invalid weight. Weight must be a valid number.")
+            weight = input("Enter Weight again: \n")
+
         address = self.adressform.GetAdress()
+
         email = input("Enter Email: \n")
-        mobile = input("Enter Mobile: \n")
+        while not self.validator.check_valid_email(email):
+            print("Invalid email format.")
+            email = input("Enter Email again: \n")
+
+        mobile = input("Enter Mobile without '+316': \n")
+        while not self.validator.create_phone_numer(mobile):
+            print("Invalid mobile phone number. Mobile phone number must be 8 digits long.")
+            mobile = input("Enter Mobile again without '+316': \n")
 
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
+        print(colored('New member successfully added.', 'green'))
         return member
         
     def SearchTermForm(self):
@@ -83,12 +117,18 @@ class MenuForms:
     def ResetConsultantForm(self, consultant):
         print("Reset Consultant Password")
         password = input(f"Enter new Password for '{consultant.username}': \n")
+        while not self.validator.valid_password(password):
+            print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            password = input("Enter new Password again: \n")
         consultant.password = password
         return consultant
     
     def ResetAdminForm(self, admin):
         print("Reset Admin Password")
         password = input(f"Enter new Password for '{admin.username}': \n")
+        while not self.validator.valid_password(password):
+            print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            password = input("Enter new Password again: \n")
         admin.password = password
         return admin
     
@@ -142,6 +182,9 @@ class MenuForms:
     
     def UpdatePasswordForm(self):
         newPassword = input("Enter new password: \n")
+        while not self.validator.valid_password(newPassword):
+            print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            newPassword = input("Enter new password again: \n")
         return newPassword
     
     
