@@ -4,7 +4,6 @@ from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
 from rodeDatabase import DatabaseManager
 
-
 logged_in_user = None
 isUserLoggedIn = False
 dbMan = DatabaseManager()
@@ -18,23 +17,24 @@ def LoginMenu():
         
         if not user_found:
             print("Invalid username or password. Please try again.")
+            log("", "Unsuccessful login", f"Username: '{username}' is used for a login attempt with wrong password.")
         else:
             isUserLoggedIn = True
             if logged_in_user.typeUser == "SuperAdmin":
                 print("\nLogin successful as Super Admin")
-                log("Super Admin","Logged in")
+                log("Super Admin","Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
             
             if logged_in_user.typeUser == "SystemAdmin":
                 print(f"\nLogin successful as Administrator: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
+                log(logged_in_user.username,"Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
 
             if logged_in_user.typeUser == "Consultant":
                 print(f"\nLogin successful as Consultant: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
+                log(logged_in_user.username,"Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
     else:
@@ -50,7 +50,7 @@ class MenuFunctions:
     def SearchMember(self):
         searchTerm = self.menuForm.SearchTermForm()
         listMembers = logged_in_user.services.GetallMembers()
-        foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
+        foundMembers = logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm, [])# ik heb [] dit gedaan want in de while loop word foundMembers bijgevuld
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
         return selectedMember
 
@@ -79,7 +79,7 @@ class MenuFunctions:
     def SearchUser(self):
         searchTerm = self.menuForm.SearchTermForm()
         listUsers = logged_in_user.services.GetAllUsers()
-        foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
+        foundUsers = logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm, []) # ik heb [] dit gedaan want in de while loop word foundUsers bijgevuld
         selectedUser = self.menuForm.SelectUserForm(foundUsers)
         return selectedUser
 
@@ -147,6 +147,7 @@ class MenuFunctions:
     def LogOut(self):
         global logged_in_user
         logged_in_user = None
+        LoginMenu()
         #ConsoleSafety(LoginMenu)
         return
 

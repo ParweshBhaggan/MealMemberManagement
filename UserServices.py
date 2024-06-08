@@ -94,6 +94,20 @@ class UserServices:
        id = self.databaseManager.FetchConsultantID(user)
        return id
 
+    def CheckMemberMobile(self, mobileNumber):
+        mobile = self.databaseManager.FetchMemberMobile(mobileNumber)
+        if mobile is not None:
+            print(f"Number exists!!!")
+            return True
+        return False
+
+    def CheckMemberEmail(self, emailAddress):
+        email = self.databaseManager.FetchMemberEmail(emailAddress)
+        if email is not None:
+            print(f"Email exists!!!")
+            return True
+        return False
+
     def GetUsernameUsers(self, ListUser):
         if len(ListUser) > 0:
             for user in ListUser:

@@ -123,6 +123,29 @@ class  DatabaseManager:
         con.close()
         return id
     
+    def FetchMemberMobile(self, mobileNumber):
+        con = sqlite3.connect(self.dbname)
+        self.cur= con.cursor()
+        self.cur.execute("""
+            SELECT mobile FROM Member
+            WHERE mobile = ?
+        """, (mobileNumber,))
+        mobile = self.cur.fetchone()
+        con.commit()
+        con.close()
+        return mobile
+    
+    def FetchMemberEmail(self, email):
+        con = sqlite3.connect(self.dbname)
+        self.cur= con.cursor()
+        self.cur.execute("""
+            SELECT email FROM Member
+            WHERE email = ?
+        """, (email,))
+        mobile = self.cur.fetchone()
+        con.commit()
+        con.close()
+        return mobile
 
     def resetSystemAdminPassword(self,sytemadmin):
         con = sqlite3.connect(self.dbname)
