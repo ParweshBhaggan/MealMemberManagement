@@ -14,3 +14,6 @@ class Utilities:
 
     def SleepConsole(self, timer):
         time.sleep(timer)
+    
+    def PrintMenuTitle(self, title):
+        print(f"-----    {title}    -----\n")

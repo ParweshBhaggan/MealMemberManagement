@@ -12,6 +12,8 @@ class Program:
         self.LoginMenu()
     
     def LoginMenu(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Login")
         username = input("Enter username: ")
         password = input("Enter password: ")
 
@@ -20,15 +22,18 @@ class Program:
             
             if not self.user_found:
                 print("Invalid username or password. Please try again.")
+                self.utilities.SleepConsole(1.1)
+                self.LoginMenu()
             else:
                 self.menuController = MenuController(self.logged_in_user)
                 self.menuController.userLoggedIn = True
                 if self.logged_in_user.typeUser == "SuperAdmin":
                     print("\nLogin successful as Super Admin")
                     log("Super Admin","Logged in")
-                    self.utilities.SleepConsole(2)
+                    self.utilities.SleepConsole(1.1)
 
                     while(self.menuController.canShowMenu):
+                        self.utilities.ClearConsole()
                         self.menuController.ViewSuperAdminMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
@@ -39,11 +44,11 @@ class Program:
                 if self.logged_in_user.typeUser == "SystemAdmin":
                     print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
-                    self.utilities.SleepConsole(2)
-
-
+                    self.utilities.SleepConsole(1.1)
+                    
                     while(self.menuController.canShowMenu):
-                        self.menuController.ViewSuperAdminMenu()
+                        self.utilities.ClearConsole()
+                        self.menuController.ViewSystemAdminMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
 
@@ -53,11 +58,11 @@ class Program:
                 if self.logged_in_user.typeUser == "Consultant":
                     print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
-                    self.utilities.SleepConsole(2)
-
+                    self.utilities.SleepConsole(1.1)
 
                     while(self.menuController.canShowMenu):
-                        self.menuController.ViewSuperAdminMenu()
+                        self.utilities.ClearConsole()
+                        self.menuController.ViewConsultantMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
 

@@ -1,5 +1,6 @@
 from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
+from Utilities import Utilities
 
 # consultants and system admins should have profiles, in addition to their usernames and 
 # passwords. Their profiles contain only first name, last name, 
@@ -12,12 +13,15 @@ class MenuFunctions:
 
     def UserProfile(self):
         if(self.logged_in_user.typeUser == "SuperAdmin"):
-            print(f"Profile:\n{self.logged_in_user.username} \n")    
+            print(f"Profile:\nUsername: {self.logged_in_user.username} \n")
         else:
             print(f"Profile:")
-            print(f"{self.logged_in_user.firstname}")
-            print(f"{self.logged_in_user.lastname}")
-            print(f"{self.logged_in_user.registrationdate}")    
+            print(f"First Name: {self.logged_in_user.firstname}")
+            print(f"Last Name: {self.logged_in_user.lastname}")
+            print(f"Registration Date: {self.logged_in_user.registrationdate}")
+
+        print("===============================================================\n")    
+
 
 
 
@@ -130,6 +134,7 @@ class MenuController:
         self.menuFunctions = MenuFunctions(self.user)
         self.canShowMenu = True
         self.userLoggedIn = False
+        self.utilities = Utilities()
     
     consultantMenu = [
         "Search member",
@@ -176,6 +181,7 @@ class MenuController:
 
     def CreateMenu(self, arr):
         self.menuFunctions.UserProfile()
+        self.utilities.PrintMenuTitle("Menu")
         index = 1
         for item in arr:
             print(str(index) + " " + item)
