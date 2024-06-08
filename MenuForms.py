@@ -1,13 +1,17 @@
 
 from User import Consultant, SuperAdmin, SystemAdmin
 from Members import Member
+from Utilities import Utilities
 
 
 class MenuForms:
-    def __init__(self) -> None:
-        pass
+    def __init__(self):
+        self.utilities = Utilities()
+        
 
     def UserForm(self, user):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("User Form")
         firstname = input("Enter Firstname: \n")
         lastname = input("Enter Lastname: \n")
         username = input("Enter Username: \n")
@@ -18,9 +22,13 @@ class MenuForms:
             user = SystemAdmin(firstname, lastname, username, password)
         elif(name == "Consultant"):
             user = Consultant(firstname, lastname, username, password)
+        print(f"Added User: {user.firstname} {user.lastname} {user.typeUser}")
+        self.utilities.SleepConsole(1.1)
         return user
 
     def MemberForm(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Member Form")
         firstname = input("Enter Firstname: \n")
         lastname = input("Enter Lastname: \n")
         age = int(input("Enter Age: \n"))
@@ -31,6 +39,8 @@ class MenuForms:
         mobile = input("Enter Mobile: \n")
 
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
+        print(f"Added Member: {member.firstname} {member.lastname}")
+        self.utilities.SleepConsole(1.1)
         return member
         
     def SearchTermForm(self):
@@ -38,12 +48,13 @@ class MenuForms:
         
         if search_type == '':
             print("Invalid search type.")
+            self.utilities.SleepConsole(1.1)
             self.SearchTermForm()
         return search_type
     
     def SelectUserForm(self, listUser):
-        print("===================================")
-        print("Found users: ")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Found Users")
         if len(listUser) > 0:
             menuItem = 1
             for index in range(0, len(listUser)):
@@ -59,15 +70,21 @@ class MenuForms:
                 
                 selectedIndex = selectedOption - 1
                 selectedUser = listUser[selectedIndex]
+                self.utilities.ClearConsole()
+                self.utilities.PrintMenuTitle("Selected User")
                 print( "U have selected: "  + selectedUser.firstname)
                 print("=================================")
+                self.utilities.SleepConsole(1.1)
                 return selectedUser
             else:
                 print("=====================")
                 print("Wrong option! Retry!")
+                self.utilities.SleepConsole(1.1)
                 self.SelectUserForm(listUser)
     
     def DeleteUserForm(self, user):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Delete User")
         if hasattr(user, 'typeUser'):
             print(f"Are you sure you want to delete the {user.typeUser}: {user.username}? (y/n)")
         else:
@@ -75,25 +92,34 @@ class MenuForms:
         confirm = input()
         if confirm.lower() == 'y':
             print("Deleting user...")
+            self.utilities.SleepConsole(1.1)
             return True
         else:
             print("User deletion cancelled.")
+            self.utilities.SleepConsole(1.1)
             return False
     
     def ResetConsultantForm(self, consultant):
-        print("Reset Consultant Password")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Reset Consultant Password")
         password = input(f"Enter new Password for '{consultant.username}': \n")
         consultant.password = password
+        print(f"Password Resetted!")
+        self.utilities.SleepConsole(1.1)
         return consultant
     
     def ResetAdminForm(self, admin):
-        print("Reset Admin Password")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Reset Admin Password")
         password = input(f"Enter new Password for '{admin.username}': \n")
         admin.password = password
+        print(f"Password Resetted!")
+        self.utilities.SleepConsole(1.1)
         return admin
     
     def UpdateAdminForm(self, admin):
-        print("Update Admin Information")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Update Admin Form")
         firstname = input(f"Enter Firstname (or enter to skip): \n") or admin.firstname
         lastname = input(f"Enter Lastname (or enter to skip): \n") or admin.lastname
         username = input(f"Enter Username (or enter to skip): \n") or admin.username
@@ -102,11 +128,14 @@ class MenuForms:
         admin.lastname = lastname
         admin.username = username
         admin.password = admin.password
+        print(f"Updated System Admin!")
+        self.utilities.SleepConsole(1.1)
 
         return admin
     
     def UpdateConsultantForm(self, consultant):
-        print("Update Consultant Information")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Update Consultant Form")
         firstname = input(f"Enter Firstname (or enter to skip): \n") or consultant.firstname
         lastname = input(f"Enter Lastname (or enter to skip): \n") or consultant.lastname
         username = input(f"Enter Username (or enter to skip): \n") or consultant.username
@@ -115,11 +144,14 @@ class MenuForms:
         consultant.lastname = lastname
         consultant.username = username
         consultant.password = consultant.password
+        print(f"Updated Consultant!")
+        self.utilities.SleepConsole(1.1)
 
         return consultant
     
     def UpdateMemberForm(self, member):
-        print("Update Member Information")
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Update Member Form")
         firstname = input(f"Enter Firstname (or enter to skip): \n") or member.firstname
         lastname = input(f"Enter Lastname (or enter to skip): \n") or member.lastname
         age = input(f"Enter Age (or enter to skip): \n") or member.age
@@ -137,9 +169,14 @@ class MenuForms:
         member.adress = adress
         member.email = email
         member.mobile = mobile
-
+        print(f"Updated Member!")
+        self.utilities.SleepConsole(1.1)
         return member
     
     def UpdatePasswordForm(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Update Password")
         newPassword = input("Enter new password: \n")
+        print(f"Updated Password!")
+        self.utilities.SleepConsole(1.1)
         return newPassword
