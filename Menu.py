@@ -18,24 +18,24 @@ def LoginMenu():
         
         if not user_found:
             print("Invalid username or password. Please try again.")
-            log()
+            log("", "Unsuccessful login", f"Username: '{username}' is used for a login attempt with wrong password.")
         else:
             isUserLoggedIn = True
             if logged_in_user.typeUser == "SuperAdmin":
                 print("\nLogin successful as Super Admin")
-                log("Super Admin","Logged in")
+                log("Super Admin","Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
             
             if logged_in_user.typeUser == "SystemAdmin":
                 print(f"\nLogin successful as Administrator: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
+                log(logged_in_user.username,"Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
 
             if logged_in_user.typeUser == "Consultant":
                 print(f"\nLogin successful as Consultant: {logged_in_user.username}")
-                log(logged_in_user.username,"Logged in")
+                log(logged_in_user.username,"Logged in successfully")
                 time.sleep(2)
                 #ConsoleSafety(HomeMenu)
     else:
