@@ -47,10 +47,11 @@ class MenuForms:
         self.utilities.PrintMenuTitle("Member Form")
         firstname = input("Enter Firstname: \n")
         lastname = input("Enter Lastname: \n")
-        age = int(input("Enter Age: \n"))
+        age = input("Enter age: \n")
         while not self.validator.check_valid_age(age):
             print("Invalid age. Age must be a number between 1 and 111.")
-            age = input("Enter Age again: \n")
+            age = input("Enter age: \n")
+
 
         gender = input("Enter Gender (options: male, female, other, prefer not to say): \n")
         while not self.validator.check_valid_gender(gender):
@@ -58,7 +59,7 @@ class MenuForms:
             gender = input("Enter Gender again: \n")
 
 
-        weight = float(input("Enter Weight: \n"))
+        weight = input("Enter Weight: \n")
         while not self.validator.check_valid_weigth(weight):
             print("Invalid weight. Weight must be a valid number.")
             weight = input("Enter Weight again: \n")

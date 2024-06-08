@@ -80,5 +80,6 @@ class Program:
                     #ConsoleSafety(HomeMenu)
         else:
             print("Username and password cannot be empty.")
+            self.LoginMenu()
 
 program = Program()

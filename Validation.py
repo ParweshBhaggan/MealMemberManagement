@@ -134,6 +134,7 @@ class Validators:
     
     def check_valid_age(self, age):
         """ Validates the age input based on certain criterias """
+        
         input_age = age
         try:
             input_age = int(age)
@@ -149,7 +150,7 @@ class Validators:
         """ Validates the weigth input based on certain criterias """
         input_weight = weight
         try:
-            input_weight = int(weight)
+            input_weight = float(weight)
             return True
         except Exception as e:
             print("Incorrect weight format")
