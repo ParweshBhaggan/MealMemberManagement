@@ -14,8 +14,13 @@ class Program:
     def LoginMenu(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Login")
+        print("Type 'close' in username to quit")
         username = input("Enter username: ")
+        if username.lower() == "close":
+            self.utilities.QuitApplication()
+            return
         password = input("Enter password: ")
+        
 
         if username and password:
             self.user_found, self.logged_in_user = self.dbMan.loginUser(username, password)
@@ -37,6 +42,7 @@ class Program:
                         self.menuController.ViewSuperAdminMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
+                            break
 
                     
                     #ConsoleSafety(HomeMenu)
@@ -51,6 +57,7 @@ class Program:
                         self.menuController.ViewSystemAdminMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
+                            break
 
 
                     #ConsoleSafety(HomeMenu)
@@ -65,6 +72,7 @@ class Program:
                         self.menuController.ViewConsultantMenu()
                         if(not self.menuController.userLoggedIn):
                             self.LoginMenu()
+                            break
 
                     #ConsoleSafety(HomeMenu)
         else:

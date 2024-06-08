@@ -17,3 +17,9 @@ class Utilities:
     
     def PrintMenuTitle(self, title):
         print(f"-----    {title}    -----\n")
+
+    def QuitApplication(self):
+        print("Closing application...")
+        self.SleepConsole(1.1)
+        self.ClearConsole()
+        return

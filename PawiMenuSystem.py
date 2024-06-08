@@ -10,6 +10,7 @@ class MenuFunctions:
     def __init__(self, logged_in_user):
         self.menuForm = MenuForms()
         self.logged_in_user = logged_in_user
+        self.utilities = Utilities()
 
     def UserProfile(self):
         if(self.logged_in_user.typeUser == "SuperAdmin"):
@@ -26,6 +27,8 @@ class MenuFunctions:
 
 
     def SearchMember(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Search Member")
         searchTerm = self.menuForm.SearchTermForm()
         listMembers = self.logged_in_user.services.GetallMembers()
         foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
@@ -55,6 +58,8 @@ class MenuFunctions:
         return
 
     def SearchUser(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Search User")
         searchTerm = self.menuForm.SearchTermForm()
         listUsers = self.logged_in_user.services.GetAllUsers()
         foundUsers = self.logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
@@ -126,6 +131,10 @@ class MenuFunctions:
         isUserLoggedIn =  False
         #ConsoleSafety(LoginMenu)
         return isUserLoggedIn
+    
+    def CloseApplication(self):
+        self.utilities.QuitApplication()
+        return
 
 
 class MenuController:
@@ -200,6 +209,7 @@ class MenuController:
         print("===============================")
         selectedOption = input( "Select option: (Press x to quit)\n")
         if(selectedOption == "x"):
+            self.menuFunctions.CloseApplication()
             self.canShowMenu = False
         else:
             try: 
@@ -235,6 +245,7 @@ class MenuController:
         print("===============================")
         selectedOption = input( "Select option: (Press x to quit)\n")
         if(selectedOption == "x"):
+            self.menuFunctions.CloseApplication()
             self.canShowMenu = False
         else:
             try: 
@@ -288,6 +299,7 @@ class MenuController:
         selectedOption = input( "Select option: (Press x to quit)\n")
         
         if(selectedOption == "x"):
+            self.menuFunctions.CloseApplication()
             self.canShowMenu = False
         else:
             try: 
