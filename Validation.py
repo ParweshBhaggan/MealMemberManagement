@@ -90,15 +90,14 @@ class Validators:
             return False
         
         return True
-    
-    def create_phone_numer(self, digits):
-        """ Validates and creates a phone number based on certain criterias """
-        if not self._check_valid_phone_digits(digits):
+
+    def ValidateNumber(self, number):
+        if(not len(number) == 14):
+            print(f"Invalid mobile phone number. Mobile phone number must be 8 digits long.")
             return False
-        text_digits = str(digits)
-        number_prefix = "+31-6-"
-        phone_number = number_prefix + text_digits
-        return phone_number
+        else:
+            return True
+        
     
     def check_valid_zipcode(self, zipcode):
         """ Validates the zipcode based on certain criterias """
@@ -164,12 +163,12 @@ class Validators:
 
     def check_valid_email(self, email):
         """ Validates the email input based on certain criterias """
-        email_characters = ['@', '.']
+        regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
-        for char in email_characters:
-            if char not in email:
-                return False
-        return True
+        if re.match(regex, email):
+            return True
+        print("Invalid email format.")
+        return False
 
     def check_null_bytes(self, input_string):
         """Checks for null_bytes"""
@@ -224,15 +223,6 @@ class Validators:
         if 12 <= len(password) <= 30:
             return True
         return False
-     
-    def _check_valid_phone_digits(self, text):
-        try:
-            digits = int(text)
-            if not len(text) == 8:
-                return False
-            return digits
-        except Exception as e:
-            return False
         
 
 class EncryptionHandler:
