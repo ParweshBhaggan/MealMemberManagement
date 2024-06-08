@@ -4,7 +4,6 @@ from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
 from rodeDatabase import DatabaseManager
 
-# AAA
 logged_in_user = None
 isUserLoggedIn = False
 dbMan = DatabaseManager()
