@@ -31,7 +31,7 @@ class UserServices:
 
     def AddConsultant(self, consultant):
         self.databaseManager.createConsultant(consultant)
-        log(self.user.username, f'New user: {consultant.typUser} is created.', f'username: "{consultant.username}"')
+        log(self.user.username, f'New user: {consultant.typeUser} is created.', f'username: "{consultant.username}"')
 
     def DeleteConsultant(self, consultant):
         self.databaseManager.deleteConsultant(consultant)

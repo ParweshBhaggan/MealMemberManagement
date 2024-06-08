@@ -1,37 +1,24 @@
 No. Date, Time, Username, Description activity, Additional Information, Suspicious
-1 07-06-2024 15:56:01 testadmin Logged in  No
-2 07-06-2024 15:56:36 testadmin Logged in  No
-3 07-06-2024 15:56:56 testadmin User: Consultant is updated. User: "testconsul" No
-4 07-06-2024 15:58:27 testadmin Logged in  No
-5 07-06-2024 16:07:15 testadmin Logged in  No
-6 07-06-2024 16:08:41 testadmin Logged in  No
-7 07-06-2024 16:09:09 testadmin Updated password. SystemAdmin: testadmin changed his password No
-8 08-06-2024 13:54:07 Super Admin Logged in  No
-9 08-06-2024 13:55:17 Super Admin Logged in  No
-10 08-06-2024 13:57:18 Super Admin Logged in  No
-11 08-06-2024 13:58:19 Super Admin Logged in  No
-12 08-06-2024 13:59:35 Super Admin Logged in  No
-13 08-06-2024 14:00:47 Super Admin Logged in  No
-14 08-06-2024 14:01:57 Super Admin Logged in  No
-15 08-06-2024 14:02:53 Super Admin Logged in  No
-16 08-06-2024 14:08:55 Super Admin Logged in  No
-17 08-06-2024 14:11:11 Super Admin Logged in  No
-18 08-06-2024 14:12:01 Super Admin Logged in  No
-19 08-06-2024 14:16:39 Super Admin Logged in  No
-20 08-06-2024 14:17:43 testconsul Logged in  No
-21 08-06-2024 14:17:51 testconsul Logged in  No
-22 08-06-2024 14:18:48 testconsul Logged in  No
-23 08-06-2024 14:19:00 testconsul Logged in  No
-24 08-06-2024 14:19:19 Super Admin Logged in  No
-25 08-06-2024 14:20:18 testconsul Logged in  No
-26 08-06-2024 14:22:11 testconsul Logged in  No
-27 08-06-2024 14:24:19 Super Admin Logged in  No
-28 08-06-2024 14:25:08 super_admin New user: Member is created. firstname: "Pawi", lastname: "Bhaggan No
-29 08-06-2024 14:25:26 Super Admin Logged in  No
-30 08-06-2024 14:25:42 testconsul Logged in  No
-31 08-06-2024 14:25:59 testconsul Logged in  No
-32 08-06-2024 14:26:00 testconsul Logged in  No
-33 08-06-2024 14:27:21 testconsul Logged in  No
-34 08-06-2024 14:27:36 Super Admin Logged in  No
-35 08-06-2024 14:37:27 Super Admin Logged in  No
-36 08-06-2024 14:39:32 Super Admin Logged in  No
+1 08-06-2024 14:50:01 Super Admin Logged in  No
+2 08-06-2024 14:50:15 testconsul Logged in  No
+3 08-06-2024 14:50:47 testconsul New user: Member is created. firstname: "John", lastname: "Doe No
+4 08-06-2024 14:51:20 testconsul Logged in  No
+5 08-06-2024 15:29:48 Super Admin Logged in  No
+6 08-06-2024 15:58:20 Super Admin Logged in  No
+7 08-06-2024 16:39:09 Super Admin Logged in  No
+8 08-06-2024 16:41:56 Super Admin Logged in  No
+9 08-06-2024 16:42:34 super_admin New user: Member is created. firstname: "PawiNew", lastname: "PawiNewLast No
+10 08-06-2024 16:43:06 super_admin User: Member is updated. User: firstname: "Parwesh", lastname: "Bhaggan is updated No
+11 08-06-2024 16:43:24 super_admin User: Member is deleted. User: firstname: "PawiFirst", lastname: "PawiLast is deleted No
+12 08-06-2024 16:44:44 Super Admin Logged in  No
+13 08-06-2024 16:45:31 super_admin New user: Consultant is created. username: "pawiii" No
+14 08-06-2024 16:46:18 super_admin User: Consultant password updated. Consultant: "pawiii" password is updated No
+15 08-06-2024 16:46:48 super_admin User: Consultant is updated. User: "Pawi123" No
+16 08-06-2024 16:47:24 super_admin User: Consultant is deleted. User: "testconsul" is deleted No
+17 08-06-2024 16:48:07 super_admin User: SystemAdmin is deleted. User: "PawiAdminUser" is deleted No
+18 08-06-2024 16:48:56 super_admin New user: SystemAdmin is created. username: "bhagPawA" No
+19 08-06-2024 16:49:40 super_admin User: SystemAdmin is updated. User: "bhagPaw" No
+20 08-06-2024 16:51:06 Super Admin Logged in  No
+21 08-06-2024 16:51:35 super_admin User: SystemAdmin password updated. SystemAdmin: "PawiAdminUser" password is updated No
+22 08-06-2024 16:52:52 PawiAdminUser Logged in  No
+23 08-06-2024 16:53:02 PawiAdminUser Logged in  No

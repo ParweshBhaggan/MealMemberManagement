@@ -31,7 +31,7 @@ class MenuFunctions:
         self.utilities.PrintMenuTitle("Search Member")
         searchTerm = self.menuForm.SearchTermForm()
         listMembers = self.logged_in_user.services.GetallMembers()
-        foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm)
+        foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm, [])
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
         return selectedMember
 
@@ -62,7 +62,7 @@ class MenuFunctions:
         self.utilities.PrintMenuTitle("Search User")
         searchTerm = self.menuForm.SearchTermForm()
         listUsers = self.logged_in_user.services.GetAllUsers()
-        foundUsers = self.logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm)
+        foundUsers = self.logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm, [])
         selectedUser = self.menuForm.SelectUserForm(foundUsers)
         return selectedUser
 

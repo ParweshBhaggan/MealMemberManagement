@@ -22,6 +22,8 @@ class MenuForms:
             user = SystemAdmin(firstname, lastname, username, password)
         elif(name == "Consultant"):
             user = Consultant(firstname, lastname, username, password)
+        print(f"Added User: {user.firstname} {user.lastname} {user.typeUser}")
+        self.utilities.SleepConsole(1.1)
         return user
 
     def MemberForm(self):
@@ -37,6 +39,8 @@ class MenuForms:
         mobile = input("Enter Mobile: \n")
 
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
+        print(f"Added Member: {member.firstname} {member.lastname}")
+        self.utilities.SleepConsole(1.1)
         return member
         
     def SearchTermForm(self):
@@ -100,6 +104,8 @@ class MenuForms:
         self.utilities.PrintMenuTitle("Reset Consultant Password")
         password = input(f"Enter new Password for '{consultant.username}': \n")
         consultant.password = password
+        print(f"Password Resetted!")
+        self.utilities.SleepConsole(1.1)
         return consultant
     
     def ResetAdminForm(self, admin):
@@ -107,6 +113,8 @@ class MenuForms:
         self.utilities.PrintMenuTitle("Reset Admin Password")
         password = input(f"Enter new Password for '{admin.username}': \n")
         admin.password = password
+        print(f"Password Resetted!")
+        self.utilities.SleepConsole(1.1)
         return admin
     
     def UpdateAdminForm(self, admin):
@@ -120,6 +128,8 @@ class MenuForms:
         admin.lastname = lastname
         admin.username = username
         admin.password = admin.password
+        print(f"Updated System Admin!")
+        self.utilities.SleepConsole(1.1)
 
         return admin
     
@@ -134,6 +144,8 @@ class MenuForms:
         consultant.lastname = lastname
         consultant.username = username
         consultant.password = consultant.password
+        print(f"Updated Consultant!")
+        self.utilities.SleepConsole(1.1)
 
         return consultant
     
@@ -157,11 +169,14 @@ class MenuForms:
         member.adress = adress
         member.email = email
         member.mobile = mobile
-
+        print(f"Updated Member!")
+        self.utilities.SleepConsole(1.1)
         return member
     
     def UpdatePasswordForm(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Password")
         newPassword = input("Enter new password: \n")
+        print(f"Updated Password!")
+        self.utilities.SleepConsole(1.1)
         return newPassword
