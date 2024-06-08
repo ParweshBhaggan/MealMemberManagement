@@ -41,6 +41,7 @@ class Program:
                         self.utilities.ClearConsole()
                         self.menuController.ViewSuperAdminMenu()
                         if(not self.menuController.userLoggedIn):
+                            self.logged_in_user = None
                             self.LoginMenu()
                             break
 
@@ -56,6 +57,7 @@ class Program:
                         self.utilities.ClearConsole()
                         self.menuController.ViewSystemAdminMenu()
                         if(not self.menuController.userLoggedIn):
+                            self.logged_in_user = None
                             self.LoginMenu()
                             break
 
@@ -71,6 +73,7 @@ class Program:
                         self.utilities.ClearConsole()
                         self.menuController.ViewConsultantMenu()
                         if(not self.menuController.userLoggedIn):
+                            self.logged_in_user = None
                             self.LoginMenu()
                             break
 

@@ -22,3 +22,8 @@ No. Date, Time, Username, Description activity, Additional Information, Suspicio
 21 08-06-2024 16:51:35 super_admin User: SystemAdmin password updated. SystemAdmin: "PawiAdminUser" password is updated No
 22 08-06-2024 16:52:52 PawiAdminUser Logged in  No
 23 08-06-2024 16:53:02 PawiAdminUser Logged in  No
+24 08-06-2024 16:58:50 Super Admin Logged in  No
+25 08-06-2024 16:59:31 super_admin New user: Member is created. firstname: "NewMem", lastname: "MemLast No
+26 08-06-2024 16:59:59 super_admin User: Member is updated. User: firstname: "NewMem", lastname: "MemLast is updated No
+27 08-06-2024 17:00:28 PawiAdminUser Logged in  No
+28 08-06-2024 17:00:33 PawiAdminUser Logged in  No
