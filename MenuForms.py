@@ -19,16 +19,8 @@ class MenuForms:
     def UserForm(self, user):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("User Form")
-   
         firstname = input("Enter Firstname: \n")
-        while not self.validator.valid_firstname(firstname):
-            print("Invalid firstname. Firstname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            firstname = input("Enter Firstname again: \n")
-        
         lastname = input("Enter Lastname: \n")
-        while not self.validator.valid_lastname(lastname):
-            print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            lastname = input("Enter Lastname again: \n")
         
         username = input("Enter Username: \n")
         while not self.validator.valid_username(username):
@@ -53,17 +45,8 @@ class MenuForms:
     def MemberForm(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Member Form")
-  
         firstname = input("Enter Firstname: \n")
-        while not self.validator.valid_firstname(firstname):
-            print("Invalid firstname. Firstname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            firstname = input("Enter Firstname again: \n")
-        
         lastname = input("Enter Lastname: \n")
-        while not self.validator.valid_lastname(lastname):
-            print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            lastname = input("Enter Lastname again: \n")
-
         age = input("Enter age: \n")
         while not self.validator.check_valid_age(age):
             print("Invalid age. Age must be a number between 1 and 111.")
@@ -180,122 +163,74 @@ class MenuForms:
     def UpdateAdminForm(self, admin):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Admin Form")
-        
         firstname = input(f"Enter Firstname (or enter to skip): \n") or admin.firstname
-        while not self.validator.valid_firstname(firstname):
-            print("Invalid firstname. Firstname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            firstname = input("Enter Firstname again: \n")
-
         lastname = input(f"Enter Lastname (or enter to skip): \n") or admin.lastname
-        while not self.validator.valid_lastname(lastname):
-            print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-            lastname = input("Enter Lastname again: \n")
-
         username = input(f"Enter Username (or enter to skip): \n") or admin.username
-        while not self.validator.valid_username(username):
-            username = input("Invalid username. Please enter a valid username: \n")
 
         admin.firstname = firstname
         admin.lastname = lastname
         admin.username = username
-
-        print("Updated System Admin!")
+        admin.password = admin.password
+        print(f"Updated System Admin!")
         self.utilities.SleepConsole(1.1)
-        return admin
 
+        return admin
     
     def UpdateConsultantForm(self, consultant):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Consultant Form")
-        
         firstname = input(f"Enter Firstname (or enter to skip): \n") or consultant.firstname
-        while not self.validator.valid_firstname(firstname):
-             print("Invalid firstname. Firstname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-             firstname = input("Enter Firstname again: \n")
         lastname = input(f"Enter Lastname (or enter to skip): \n") or consultant.lastname
-        while not self.validator.valid_lastname(lastname):
-             print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-             lastname = input("Enter Lastname again: \n")
-
         username = input(f"Enter Username (or enter to skip): \n") or consultant.username
-        while not self.validator.valid_username(username):
-            username = input("Invalid username. Please enter a valid username: \n")
 
         consultant.firstname = firstname
         consultant.lastname = lastname
         consultant.username = username
-
-        print("Updated Consultant!")
+        consultant.password = consultant.password
+        print(f"Updated Consultant!")
         self.utilities.SleepConsole(1.1)
-        return consultant
 
+        return consultant
     
     def UpdateMemberForm(self, member):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Member Form")
-        
         firstname = input(f"Enter Firstname (or enter to skip): \n") or member.firstname
-        while not self.validator.valid_firstname(firstname):
-             print("Invalid firstname. Firstname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-             firstname = input("Enter Firstname again: \n")
         lastname = input(f"Enter Lastname (or enter to skip): \n") or member.lastname
-        while not self.validator.valid_lastname(lastname):
-             print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
-             lastname = input("Enter Lastname again: \n")
-
-
         age = input(f"Enter Age (or enter to skip): \n") or member.age
-        while not self.validator.check_valid_age(age):
-            age = input("Invalid age. Please enter a valid age between 1 and 111: \n")
-
         gender = input(f"Enter Gender (or enter to skip): \n") or member.gender
-        while not self.validator.check_valid_gender(gender):
-            gender = input("Invalid gender. Please enter a valid gender (male, female, other, prefer not to say): \n")
-
         weight = input(f"Enter Weight (or enter to skip): \n") or member.weight
-        while not self.validator.check_valid_weigth(weight):
-            weight = input("Invalid weight. Please enter a weight between 3 and 250 kilograms: \n")
-
-        address = self.adressform.UpdateAdress(member.adress)
-
+        adress = self.adressform.UpdateAdress(member.adress)
         email = input(f"Enter Email (or enter to skip): \n") or member.email
-        while not self.validator.check_valid_email(email):
-            email = input("Invalid email. Please enter a valid email: \n")
-
         mobile = input(f"Enter Mobile (or enter to skip): \n") or member.mobile
-        while not self.validator.ValidateNumber(mobile):
-            mobile = input("Invalid mobile number. Please enter a valid mobile number: \n")
 
         member.firstname = firstname
         member.lastname = lastname
         member.age = int(age)
         member.gender = gender
         member.weight = float(weight)
-        member.adress = address
+        member.adress = adress
         member.email = email
         member.mobile = mobile
-
-        print("Updated Member!")
+        print(f"Updated Member!")
         self.utilities.SleepConsole(1.1)
         return member
-
+    
     def UpdatePasswordForm(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Password")
-        
         newPassword = input("Enter new password: \n")
         while not self.validator.valid_password(newPassword):
-            newPassword = input("Invalid password. Please enter a valid password (12-30 characters long, include at least one uppercase letter, one lowercase letter, one digit, and one special character): \n")
+            print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
+            newPassword = input("Enter new password again: \n")
 
-        print("Updated Password!")
+        print(f"Updated Password!")
         self.utilities.SleepConsole(1.1)
         return newPassword
-
     
     
 
 class AddressForm:
-    validator = Validators()
     def __init__(self):
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "Eindhoven", "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen", "Haarlem"]
 
@@ -317,14 +252,7 @@ class AddressForm:
 
     def GetAdress(self):
         streetname = input("Enter Street Name: ")
-        while not self.validator.is_valid_street_name(streetname):
-            print("Invalid street name. It should contain only letters and spaces.")
-            streetname = input("Enter Street Name again: \n")
         housenumber = input("Enter House Number: ")
-        while not self.validator.is_valid_housenumber(housenumber):
-            print("Invalid House Number. It must be a non-negative integer.")
-            housenumber = input("Enter House Number again: \n")
-
         while True:
             zipcode = input("Enter Zip Code (DDDDXX): ")
             if len(zipcode) == 6 and zipcode[:4].isdigit() and zipcode[4:].isalpha():
