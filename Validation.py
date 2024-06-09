@@ -1,7 +1,7 @@
 import datetime    
 import random
 import re  
-import rsa     #pip install rsa
+import rsa     
 import hashlib     
 import os          
 
@@ -58,8 +58,6 @@ class Validators:
             print("Wrong username")
             return False
         return True
-
-
 
     def valid_password(self,password):
         """ Validates the password based on certain criterias """
@@ -131,6 +129,14 @@ class Validators:
         except Exception as e:
             print("Wrong zipcode format DIGITS")
             return False
+    @staticmethod
+    def is_valid_street_name(street_name):
+        """Validate that the street name contains only letters and spaces."""
+        return bool(re.match(r"^[A-Za-z\s]+$", street_name))
+    @staticmethod
+    def is_valid_housenumber(housenumber):
+        """Validate that the street number is a non-negative integer."""
+        return housenumber.isdigit() and int(housenumber) >= 0
     
     def check_valid_age(self, age):
         """ Validates the age input based on certain criterias """
@@ -146,21 +152,28 @@ class Validators:
             print("Incorrect age format")
             return False
 
+    def valid_firstname(self, firstname):
+        return 2 <= len(firstname) <= 30 and firstname.replace(" ", "").replace("-", "").replace("'", "").isalpha()
+
+    def valid_lastname(self, lastname):
+        return 2 <= len(lastname) <= 30 and lastname.replace(" ", "").replace("-", "").replace("'", "").isalpha()
+
     def check_valid_weigth(self, weight):
-        """ Validates the weigth input based on certain criterias """
-        input_weight = weight
+        """Validates that the weight is between 3 and 250 kilograms."""
         try:
-            input_weight = float(weight)
-            return True
-        except Exception as e:
-            print("Incorrect weight format")
+            weight = float(weight)
+            if 3 <= weight <= 250:
+                return True
+            print("Invalid weight. Weight must be between 3 and 250 kilograms.")
+            return False
+        except ValueError:
+            print("Invalid weight format. Weight must be a number.")
             return False
     
     def check_valid_gender(self, gender):
         """ Validates the gender input based on predefined values """
         valid_genders = ['male', 'female', 'other', 'prefer not to say']
         return gender.lower() in valid_genders
-
 
     def check_valid_email(self, email):
         """ Validates the email input based on certain criterias """
