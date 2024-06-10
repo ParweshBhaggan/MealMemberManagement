@@ -20,7 +20,7 @@ class MenuForms:
         print()
         print("Type 'back' to return to Menu ")
         message = input(f"{message}")
-        if(message == "back"):
+        if(message.lower() == "back"):
             self.Goback()     
         return message
     
@@ -140,7 +140,7 @@ class MenuForms:
                     print(f"{menuItem} {listUser[index].firstname} {listUser[index].lastname}" )
                 menuItem +=1
             print("=================================")
-            selectedOption = int(input("Select user: "))
+            selectedOption = int(self.InputOverride("Select user: "))
             
             if selectedOption < menuItem:
                 
@@ -353,6 +353,7 @@ class AddressForm:
         while True:
             zipcode = self.form.InputOverride("Enter Zip Code (DDDDXX): ")
             if len(zipcode) == 6 and zipcode[:4].isdigit() and zipcode[4:].isalpha():
+                zipcode = zipcode.upper()
                 break
             else:
                 print("Invalid Zip Code format. Please enter in the format DDDDXX.")
