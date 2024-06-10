@@ -4,9 +4,7 @@ from User import Consultant, SystemAdmin
 from Utilities import Utilities
 from rodeDatabase import DatabaseManager
 
-# consultants and system admins should have profiles, in addition to their usernames and 
-# passwords. Their profiles contain only first name, last name, 
-# and registration date.
+
 class MenuFunctions:
     
     def __init__(self, logged_in_user):
@@ -385,19 +383,9 @@ class MenuController:
                 
                 self.menuFunctions = MenuFunctions(self.logged_in_user)
                 if self.logged_in_user.typeUser == "SuperAdmin":
+                    print(f"\nLogin successful as Super Admin: {self.logged_in_user.username}")
+                    log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
-
-                    # self.menuController = MenuController(self.logged_in_user)
-                    # self.menuController.userLoggedIn = True
-                    # #menu = self.menuController.ViewSuperAdminMenu
-                    # while(self.menuController.canShowMenu):
-                    #     self.utilities.ClearConsole()
-                    #     self.menuController.ViewSuperAdminMenu()
-                    #     if(not self.menuController.userLoggedIn):
-                    #         self.logged_in_user = None
-                    #         self.LoginMenu()
-                    #         break
-
                     self.ViewMenu()
 
                     
@@ -407,16 +395,6 @@ class MenuController:
                     print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
-                    
-                    # self.menuController = MenuController(self.logged_in_user)
-                    # self.menuController.userLoggedIn = True
-                    # while(self.menuController.canShowMenu):
-                    #     self.utilities.ClearConsole()
-                    #     self.menuController.ViewSystemAdminMenu()
-                    #     if(not self.menuController.userLoggedIn):
-                    #         self.logged_in_user = None
-                    #         self.LoginMenu()
-                    #         break
                     self.ViewMenu()
 
 
@@ -426,16 +404,6 @@ class MenuController:
                     print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
-
-                    # self.menuController = MenuController(self.logged_in_user)
-                    # self.menuController.userLoggedIn = True
-                    # while(self.menuController.canShowMenu):
-                    #     self.utilities.ClearConsole()
-                    #     self.menuController.ViewConsultantMenu()
-                    #     if(not self.menuController.userLoggedIn):
-                    #         self.logged_in_user = None
-                    #         self.LoginMenu()
-                    #         break
 
                     self.ViewMenu()
                     #ConsoleSafety(HomeMenu)
@@ -452,7 +420,6 @@ class MenuController:
             self.menu = self.ViewSystemAdminMenu
         if self.logged_in_user.typeUser == "Consultant":
             self.menu = self.ViewConsultantMenu
-        #menu = self.menuController.ViewSuperAdminMenu
         while(self.canShowMenu):
             self.utilities.ClearConsole()
             self.menu()
@@ -460,21 +427,3 @@ class MenuController:
                 self.logged_in_user = None
                 self.LoginMenu()
                 break  
-
-# menu = MenuItem()
-# LoginMenu()
-# if(isUserLoggedIn):
-        
-#     while(menu.canShowMenu):
-#         #menu.ViewConsultantMenu()
-#         #menu.ViewSuperAdminMenu()
-#         #menu.ViewSystemAdminMenu()
-#         if self.logged_in_user.typeUser == "Consultant":
-#             menu.ViewConsultantMenu()
-            
-#         if self.logged_in_user.typeUser == "SystemAdmin":
-#             menu.ViewSystemAdminMenu()
-
-#         if self.logged_in_user.typeUser == "SuperAdmin":
-#             menu.ViewSuperAdminMenu()
-            
