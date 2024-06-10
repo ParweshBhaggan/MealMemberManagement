@@ -1,5 +1,5 @@
 from Logger import log
-from rodeDatabase import DatabaseManager
+from Database import DatabaseManager
 
 class UserServices:
     def __init__(self, user):

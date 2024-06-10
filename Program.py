@@ -1,4 +1,4 @@
-from PawiMenuSystem import MenuController
+from Menu import MenuController
 
 
 class Program:
