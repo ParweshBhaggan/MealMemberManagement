@@ -50,12 +50,13 @@ class Validators:
         
         if not self._check_username_length(username):
             print("Username too long or too short")
+            print("Invalid username. Username must be 8-12 characters long.\n")
             return False
         elif not self._check_first_character(username, first_letters_array):
-            print("Incorrect 'first' letter")
+            print("Incorrect 'first' letter\n")
             return False
         elif not self._check_username_chars(username, valid_char_array):
-            print("Wrong username")
+            print("Invalid username. Username must be 8-12 characters long and can only contain letters, digits, underscores, apostrophes, and dots.\n")
             return False
         return True
 
