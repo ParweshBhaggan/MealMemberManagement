@@ -403,14 +403,3 @@ class AddressForm:
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
-# def main():
-#     address_form = AddressForm()
-#     address = address_form.get_address()
-#     print("\nAddress Entered:")
-#     print(f"Street Name: {address['street_name']}")
-#     print(f"House Number: {address['house_number']}")
-#     print(f"Zip Code: {address['zip_code']}")
-#     print(f"City: {address['city']}")
-
-# if __name__ == "__main__":
-#     main()
