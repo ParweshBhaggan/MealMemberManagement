@@ -31,7 +31,6 @@ class MenuFunctions:
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search Member")
         searchTerm = self.menuForm.SearchTermForm()        
-        #self.FromSearchToHome(searchTerm)
         listMembers = self.logged_in_user.services.GetallMembers()
         foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm, [])
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
@@ -79,48 +78,55 @@ class MenuFunctions:
 
     def UpdateConsultant(self):
         consultant = self.SearchUser()
-        updateConId = self.logged_in_user.services.GetConsultantId(consultant)
-        updatecons = self.menuForm.UpdateConsultantForm(consultant)
-        self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
+        if(consultant is not None):
+            updateConId = self.logged_in_user.services.GetConsultantId(consultant)
+            updatecons = self.menuForm.UpdateConsultantForm(consultant)
+            self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
         return
 
     def ResetConsultant(self):
         consultant = self.SearchUser()
-        resetcon = self.menuForm.ResetConsultantForm(consultant)
-        self.logged_in_user.services.ResetConsultantPassword(resetcon)
+        if(consultant is not None):
+            resetcon = self.menuForm.ResetConsultantForm(consultant)
+            self.logged_in_user.services.ResetConsultantPassword(resetcon)
         return
 
     def DeleteConsultant(self):
         consultant = self.SearchUser()
-        if self.menuForm.DeleteUserForm(consultant):
-            self.logged_in_user.services.DeleteConsultant(consultant)
-            print(f"{consultant.typeUser}: {consultant.username} deleted")
+        if(consultant is not None):
+            if self.menuForm.DeleteUserForm(consultant):
+                self.logged_in_user.services.DeleteConsultant(consultant)
+                print(f"{consultant.typeUser}: {consultant.username} deleted")
         return
 
     def AddAdmin(self):
         systemAdmin = self.menuForm.UserForm(SystemAdmin())
-        self.logged_in_user.services.AddAdmin(systemAdmin)
+        if(systemAdmin is not None):
+            self.logged_in_user.services.AddAdmin(systemAdmin)
         return
 
     def UpdateAdmin(self):
         systemadmin = self.SearchUser()
-        updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemadmin)
-        updateadmin = self.menuForm.UpdateAdminForm(systemadmin)
-        print(updateAdminId)
-        self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
+        if(systemadmin is not None):
+            updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemadmin)
+            updateadmin = self.menuForm.UpdateAdminForm(systemadmin)
+            print(updateAdminId)
+            self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
         return
 
     def ResetAdmin(self):
         systemAdmin = self.SearchUser()
-        resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
-        self.logged_in_user.services.ResetAdminPassword(resetadmin)
+        if(systemAdmin is not None):
+            resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
+            self.logged_in_user.services.ResetAdminPassword(resetadmin)
         return
 
     def DeleteAdmin(self):
         systemAdmin = self.SearchUser()
-        if self.menuForm.DeleteUserForm(systemAdmin):
-            self.logged_in_user.services.DeleteAdmin(systemAdmin)
-            print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
+        if(systemAdmin is not None):
+            if self.menuForm.DeleteUserForm(systemAdmin):
+                self.logged_in_user.services.DeleteAdmin(systemAdmin)
+                print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
         return
 
     def CreateBackUp(self):
@@ -142,10 +148,6 @@ class MenuFunctions:
         self.utilities.QuitApplication()
         return
 
-    def FromSearchToHome(self, search):
-        
-        if(search == "back"):
-            return
 
 class MenuController:
     menuFunctions = None
