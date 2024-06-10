@@ -107,6 +107,16 @@ class UserServices:
             print(f"Email exists!!!")
             return True
         return False
+    
+    def CheckUsername(self, name, username):
+        if(name == "SystemAdmin"):
+            user_username = self.databaseManager.FetchAdminUsername(username)
+        elif(name == "Consultant"):
+            user_username = self.databaseManager.FetchConsUsername(username)
+        if user_username is not None:
+            print(f"Username exists!!!")
+            return True
+        return False
 
     def GetUsernameUsers(self, ListUser):
         if len(ListUser) > 0:
