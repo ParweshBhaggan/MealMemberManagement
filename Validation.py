@@ -239,42 +239,42 @@ class Validators:
         return False
         
 
-class EncryptionHandler:
-    """Encryption handler class, that handles the encyrption/decryption of data"""
-    public_keys, private_keys = rsa.newkeys(1024)
-    public_path = "public.pem"
-    private_path = "private.pem"
+# class EncryptionHandler:
+#     """Encryption handler class, that handles the encyrption/decryption of data"""
+#     public_keys, private_keys = rsa.newkeys(1024)
+#     public_path = "public.pem"
+#     private_path = "private.pem"
 
 
-    def create_keys(self, file_path_public = public_path, file_path_private = private_path):
-        if not os.path.exists(file_path_public):
-            with open (file_path_public, "wb") as f:
-                f.write(self.public_keys.save_pkcs1("PEM"))
+#     def create_keys(self, file_path_public = public_path, file_path_private = private_path):
+#         if not os.path.exists(file_path_public):
+#             with open (file_path_public, "wb") as f:
+#                 f.write(self.public_keys.save_pkcs1("PEM"))
 
-        if not os.path.exists(file_path_private):
-            with open (file_path_private, "wb") as f:
-                f.write(self.private_keys.save_pkcs1("PEM"))
+#         if not os.path.exists(file_path_private):
+#             with open (file_path_private, "wb") as f:
+#                 f.write(self.private_keys.save_pkcs1("PEM"))
 
-    def get_public_key(file_path = public_path):
-        if os.path.exists(file_path):
-            with open (file_path, "rb") as f:
-                public_key = rsa.PublicKey.load_pkcs1(f.read())
-                return public_key
+#     def get_public_key(file_path = public_path):
+#         if os.path.exists(file_path):
+#             with open (file_path, "rb") as f:
+#                 public_key = rsa.PublicKey.load_pkcs1(f.read())
+#                 return public_key
 
-    def get_private_key(file_path = private_path):
-        if os.path.exists(file_path):
-            with open (file_path, "rb") as f:
-                private_key = rsa.PrivateKey.load_pkcs1(f.read())
-                return private_key
+#     def get_private_key(file_path = private_path):
+#         if os.path.exists(file_path):
+#             with open (file_path, "rb") as f:
+#                 private_key = rsa.PrivateKey.load_pkcs1(f.read())
+#                 return private_key
             
 
-    def encrypt_data(data, public_key):
-        encrypted_data = rsa.encrypt(data.encode(), public_key)
-        return encrypted_data
+#     def encrypt_data(data, public_key):
+#         encrypted_data = rsa.encrypt(data.encode(), public_key)
+#         return encrypted_data
 
-    def decrypt_data(data, private_key):
-        decrypted_data = rsa.decrypt(data, private_key)
-        return decrypted_data.decode()        
+#     def decrypt_data(data, private_key):
+#         decrypted_data = rsa.decrypt(data, private_key)
+#         return decrypted_data.decode()        
 
 
 class HashHandler:
