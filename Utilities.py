@@ -1,3 +1,4 @@
+import sys
 import time
 import os
 
@@ -22,4 +23,5 @@ class Utilities:
         print("Closing application...")
         self.SleepConsole(1.1)
         self.ClearConsole()
-        return
+        sys.exit()
+    

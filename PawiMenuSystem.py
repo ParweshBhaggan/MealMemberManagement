@@ -1,6 +1,8 @@
+from Logger import log
 from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
 from Utilities import Utilities
+from rodeDatabase import DatabaseManager
 
 # consultants and system admins should have profiles, in addition to their usernames and 
 # passwords. Their profiles contain only first name, last name, 
@@ -8,9 +10,10 @@ from Utilities import Utilities
 class MenuFunctions:
     
     def __init__(self, logged_in_user):
-        self.menuForm = MenuForms()
         self.logged_in_user = logged_in_user
+        self.menuForm = MenuForms(self.logged_in_user)
         self.utilities = Utilities()
+        
 
     def UserProfile(self):
         if(self.logged_in_user.typeUser == "SuperAdmin"):
@@ -29,7 +32,8 @@ class MenuFunctions:
     def SearchMember(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search Member")
-        searchTerm = self.menuForm.SearchTermForm()
+        searchTerm = self.menuForm.SearchTermForm()        
+        #self.FromSearchToHome(searchTerm)
         listMembers = self.logged_in_user.services.GetallMembers()
         foundMembers = self.logged_in_user.services.SearchMembersRecursive(listMembers, searchTerm, [])
         selectedMember = self.menuForm.SelectUserForm(foundMembers)
@@ -37,13 +41,15 @@ class MenuFunctions:
 
     def AddMember(self):
         member = self.menuForm.MemberForm()
-        self.logged_in_user.services.AddMember(member)
+        if(member is not None):
+            self.logged_in_user.services.AddMember(member)
         return
 
     def UpdateMember(self):
         member = self.SearchMember()
-        updateMember = self.menuForm.UpdateMemberForm(member)
-        self.logged_in_user.services.UpdateMember(updateMember)
+        if(member is not None):
+            updateMember = self.menuForm.UpdateMemberForm(member)
+            self.logged_in_user.services.UpdateMember(updateMember)
         return
 
     def UpdateCurrentPassword(self):
@@ -52,9 +58,10 @@ class MenuFunctions:
 
     def DeleteMember(self):
         member = self.SearchMember()
-        if self.menuForm.DeleteUserForm(member):
-            self.logged_in_user.services.DeleteMember(member)
-            print(f"Member: {member.firstname} {member.lastname} deleted")
+        if(member is not None):
+            if self.menuForm.DeleteUserForm(member):
+                self.logged_in_user.services.DeleteMember(member)
+                print(f"Member: {member.firstname} {member.lastname} deleted")
         return
 
     def SearchUser(self):
@@ -68,7 +75,8 @@ class MenuFunctions:
 
     def AddConsultant(self):
         consultant = self.menuForm.UserForm(Consultant())
-        self.logged_in_user.services.AddConsultant(consultant)
+        if(consultant is not None):
+            self.logged_in_user.services.AddConsultant(consultant)
         return
 
     def UpdateConsultant(self):
@@ -136,14 +144,21 @@ class MenuFunctions:
         self.utilities.QuitApplication()
         return
 
+    def FromSearchToHome(self, search):
+        
+        if(search == "back"):
+            return
 
 class MenuController:
-    def __init__(self, user):
-        self.user = user
-        self.menuFunctions = MenuFunctions(self.user)
+    menuFunctions = None
+
+    def __init__(self):
+        self.dbMan = DatabaseManager()
+        self.utilities = Utilities()
+        self.logged_in_user = None
+        
         self.canShowMenu = True
         self.userLoggedIn = False
-        self.utilities = Utilities()
     
     consultantMenu = [
         "Search member",
@@ -345,7 +360,106 @@ class MenuController:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
                     print("Invalid selection! Retry!")
-                    self.ViewSuperAdminMenu()  
+                    self.ViewSuperAdminMenu()
+
+    def LoginMenu(self):
+        self.utilities.ClearConsole()
+        self.utilities.PrintMenuTitle("Login")
+        print("Type 'close' in username to quit")
+        username = input("Enter username: ")
+
+        if username.lower() == "close":
+            self.utilities.QuitApplication()
+            return
+        
+        password = input("Enter password: ")
+        
+
+        if username and password:
+            self.user_found, self.logged_in_user = self.dbMan.loginUser(username, password)
+            if not self.user_found:
+                print("Invalid username or password. Please try again.")
+                self.utilities.SleepConsole(1.1)
+                self.LoginMenu()
+            else:
+                
+                self.menuFunctions = MenuFunctions(self.logged_in_user)
+                if self.logged_in_user.typeUser == "SuperAdmin":
+                    self.utilities.SleepConsole(1.1)
+
+                    # self.menuController = MenuController(self.logged_in_user)
+                    # self.menuController.userLoggedIn = True
+                    # #menu = self.menuController.ViewSuperAdminMenu
+                    # while(self.menuController.canShowMenu):
+                    #     self.utilities.ClearConsole()
+                    #     self.menuController.ViewSuperAdminMenu()
+                    #     if(not self.menuController.userLoggedIn):
+                    #         self.logged_in_user = None
+                    #         self.LoginMenu()
+                    #         break
+
+                    self.ViewMenu()
+
+                    
+                    #ConsoleSafety(HomeMenu)
+                
+                if self.logged_in_user.typeUser == "SystemAdmin":
+                    print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
+                    log(self.logged_in_user.username,"Logged in")
+                    self.utilities.SleepConsole(1.1)
+                    
+                    # self.menuController = MenuController(self.logged_in_user)
+                    # self.menuController.userLoggedIn = True
+                    # while(self.menuController.canShowMenu):
+                    #     self.utilities.ClearConsole()
+                    #     self.menuController.ViewSystemAdminMenu()
+                    #     if(not self.menuController.userLoggedIn):
+                    #         self.logged_in_user = None
+                    #         self.LoginMenu()
+                    #         break
+                    self.ViewMenu()
+
+
+                    #ConsoleSafety(HomeMenu)
+
+                if self.logged_in_user.typeUser == "Consultant":
+                    print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
+                    log(self.logged_in_user.username,"Logged in")
+                    self.utilities.SleepConsole(1.1)
+
+                    # self.menuController = MenuController(self.logged_in_user)
+                    # self.menuController.userLoggedIn = True
+                    # while(self.menuController.canShowMenu):
+                    #     self.utilities.ClearConsole()
+                    #     self.menuController.ViewConsultantMenu()
+                    #     if(not self.menuController.userLoggedIn):
+                    #         self.logged_in_user = None
+                    #         self.LoginMenu()
+                    #         break
+
+                    self.ViewMenu()
+                    #ConsoleSafety(HomeMenu)
+        else:
+            print("Username and password cannot be empty.")
+            self.LoginMenu()
+
+    def ViewMenu(self):
+        self.userLoggedIn = True
+        self.menu = None
+        if self.logged_in_user.typeUser == "SuperAdmin":
+            self.menu = self.ViewSuperAdminMenu
+        if self.logged_in_user.typeUser == "SystemAdmin":
+            self.menu = self.ViewSystemAdminMenu
+        if self.logged_in_user.typeUser == "Consultant":
+            self.menu = self.ViewConsultantMenu
+        #menu = self.menuController.ViewSuperAdminMenu
+        while(self.canShowMenu):
+            self.utilities.ClearConsole()
+            self.menu()
+            if(not self.userLoggedIn):
+                self.logged_in_user = None
+                self.LoginMenu()
+                break  
 
 # menu = MenuItem()
 # LoginMenu()

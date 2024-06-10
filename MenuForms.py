@@ -1,4 +1,5 @@
 
+
 from User import Consultant, SuperAdmin, SystemAdmin, User
 from Members import Member
 from UserServices import UserServices
@@ -9,28 +10,49 @@ from Utilities import Utilities
 
 
 class MenuForms:
-    def __init__(self) -> None:
+    def __init__(self, user) -> None:
+        self.loggedInUser = user
         self.validator = Validators()
-        self.adressform = AddressForm()
         self.services = UserServices(User())
         self.utilities = Utilities()
         
 
+    def InputOverride(self, message):
+        print()
+        print("Type 'back' to return to Menu ")
+        message = input(f"{message}")
+        if(message == "back"):
+            self.Goback()     
+        return message
+    
+    def Goback(self):
+        from PawiMenuSystem import MenuController,MenuFunctions
+        self.menu = MenuController()
+        self.menu.logged_in_user = self.loggedInUser
+        self.menu.menuFunctions = MenuFunctions(self.menu.logged_in_user)
+        self.utilities.ClearConsole()
+        self.menu.ViewMenu()
+        return
+    
+    
+
     def UserForm(self, user):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("User Form")
-        firstname = input("Enter Firstname: \n")
-        lastname = input("Enter Lastname: \n")
+       
+        firstname = self.InputOverride("Enter Firstname: \n")
         
-        username = input("Enter Username: \n")
+        lastname = self.InputOverride("Enter Lastname: \n")
+        
+        username = self.InputOverride("Enter Username: \n")
         while not self.validator.valid_username(username):
             print("Invalid username. Username must be 8-12 characters long and can only contain letters, digits, underscores, apostrophes, and dots.")
-            username = input("Enter Username again: \n")
+            username = self.InputOverride("Enter Username again: \n")
 
-        password = input("Enter Password: \n")
+        password = self.InputOverride("Enter Password: \n")
         while not self.validator.valid_password(password):
             print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
-            password = input("Enter Password again: \n")
+            password = self.InputOverride("Enter Password again: \n")
        
         # Creating the user object based on its type
         name = user.__class__.__name__
@@ -45,34 +67,35 @@ class MenuForms:
     def MemberForm(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Member Form")
-        firstname = input("Enter Firstname: \n")
-        lastname = input("Enter Lastname: \n")
-        age = input("Enter age: \n")
+        firstname = self.InputOverride("Enter Firstname: \n")
+        lastname = self.InputOverride("Enter Lastname: \n")
+        age = self.InputOverride("Enter age: \n")
         while not self.validator.check_valid_age(age):
             print("Invalid age. Age must be a number between 1 and 111.")
-            age = input("Enter age: \n")
+            age = self.InputOverride("Enter age: \n")
 
 
-        gender = input("Enter Gender (options: male, female, other, prefer not to say): \n")
+        gender = self.InputOverride("Enter Gender (options: male, female, other, prefer not to say): \n")
         while not self.validator.check_valid_gender(gender):
             print("Invalid gender. Please enter one of the following options: male, female, non-binary, other, prefer not to say.")
-            gender = input("Enter Gender again: \n")
+            gender = self.InputOverride("Enter Gender again: \n")
 
 
-        weight = input("Enter Weight: \n")
+        weight = self.InputOverride("Enter Weight: \n")
         while not self.validator.check_valid_weigth(weight):
             print("Invalid weight. Weight must be a valid number.")
-            weight = input("Enter Weight again: \n")
+            weight = self.InputOverride("Enter Weight again: \n")
 
-        address = self.adressform.GetAdress()
+        adressform = AddressForm(self.loggedInUser)
+        address = adressform.GetAdress()
 
-        email = input("Enter Email: \n")
+        email = self.InputOverride("Enter Email: \n")
         while not self.validator.check_valid_email(email) or self.services.CheckMemberEmail(email):
-            email = input("Enter Email again: \n")
+            email = self.InputOverride("Enter Email again: \n")
 
-        mobile = "+31-6-" + input("Enter Mobile without '+316': \n")
+        mobile = "+31-6-" + self.InputOverride("Enter Mobile without '+316': \n")
         while not self.validator.ValidateNumber(mobile) or self.services.CheckMemberMobile(mobile):
-            mobile = "+31-6-" + input("Enter Mobile again without '+316': \n")
+            mobile = "+31-6-" + self.InputOverride("Enter Mobile again without '+316': \n")
         
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
         print(colored('New member successfully added.', 'green'))
@@ -81,7 +104,7 @@ class MenuForms:
         return member
         
     def SearchTermForm(self):
-        search_type = input("Enter search term: \n")
+        search_type = self.InputOverride("Enter search term: \n")
         
         if search_type == '':
             print("Invalid search type.")
@@ -139,10 +162,10 @@ class MenuForms:
     def ResetConsultantForm(self, consultant):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Reset Consultant Password")
-        password = input(f"Enter new Password for '{consultant.username}': \n")
+        password = self.InputOverride(f"Enter new Password for '{consultant.username}': \n")
         while not self.validator.valid_password(password):
             print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
-            password = input("Enter new Password again: \n")
+            password = self.InputOverride("Enter new Password again: \n")
         consultant.password = password
         print(f"Password Resetted!")
         self.utilities.SleepConsole(1.1)
@@ -151,10 +174,10 @@ class MenuForms:
     def ResetAdminForm(self, admin):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Reset Admin Password")
-        password = input(f"Enter new Password for '{admin.username}': \n")
+        password = self.InputOverride(f"Enter new Password for '{admin.username}': \n")
         while not self.validator.valid_password(password):
             print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
-            password = input("Enter new Password again: \n")
+            password = self.InputOverride("Enter new Password again: \n")
         admin.password = password
         print(f"Password Resetted!")
         self.utilities.SleepConsole(1.1)
@@ -163,9 +186,9 @@ class MenuForms:
     def UpdateAdminForm(self, admin):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Admin Form")
-        firstname = input(f"Enter Firstname (or enter to skip): \n") or admin.firstname
-        lastname = input(f"Enter Lastname (or enter to skip): \n") or admin.lastname
-        username = input(f"Enter Username (or enter to skip): \n") or admin.username
+        firstname = self.InputOverride(f"Enter Firstname (or enter to skip): \n") or admin.firstname
+        lastname = self.InputOverride(f"Enter Lastname (or enter to skip): \n") or admin.lastname
+        username = self.InputOverride(f"Enter Username (or enter to skip): \n") or admin.username
 
         admin.firstname = firstname
         admin.lastname = lastname
@@ -179,9 +202,9 @@ class MenuForms:
     def UpdateConsultantForm(self, consultant):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Consultant Form")
-        firstname = input(f"Enter Firstname (or enter to skip): \n") or consultant.firstname
-        lastname = input(f"Enter Lastname (or enter to skip): \n") or consultant.lastname
-        username = input(f"Enter Username (or enter to skip): \n") or consultant.username
+        firstname = self.InputOverride(f"Enter Firstname (or enter to skip): \n") or consultant.firstname
+        lastname = self.InputOverride(f"Enter Lastname (or enter to skip): \n") or consultant.lastname
+        username = self.InputOverride(f"Enter Username (or enter to skip): \n") or consultant.username
 
         consultant.firstname = firstname
         consultant.lastname = lastname
@@ -195,14 +218,15 @@ class MenuForms:
     def UpdateMemberForm(self, member):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Member Form")
-        firstname = input(f"Enter Firstname (or enter to skip): \n") or member.firstname
-        lastname = input(f"Enter Lastname (or enter to skip): \n") or member.lastname
-        age = input(f"Enter Age (or enter to skip): \n") or member.age
-        gender = input(f"Enter Gender (or enter to skip): \n") or member.gender
-        weight = input(f"Enter Weight (or enter to skip): \n") or member.weight
-        adress = self.adressform.UpdateAdress(member.adress)
-        email = input(f"Enter Email (or enter to skip): \n") or member.email
-        mobile = input(f"Enter Mobile (or enter to skip): \n") or member.mobile
+        firstname = self.InputOverride(f"Enter Firstname (or enter to skip): \n") or member.firstname
+        lastname = self.InputOverride(f"Enter Lastname (or enter to skip): \n") or member.lastname
+        age = self.InputOverride(f"Enter Age (or enter to skip): \n") or member.age
+        gender = self.InputOverride(f"Enter Gender (or enter to skip): \n") or member.gender
+        weight = self.InputOverride(f"Enter Weight (or enter to skip): \n") or member.weight
+        adressform = AddressForm(self.loggedInUser)
+        adress = adressform.UpdateAdress(member.adress)
+        email = self.InputOverride(f"Enter Email (or enter to skip): \n") or member.email
+        mobile = self.InputOverride(f"Enter Mobile (or enter to skip): \n") or member.mobile
 
         member.firstname = firstname
         member.lastname = lastname
@@ -219,10 +243,10 @@ class MenuForms:
     def UpdatePasswordForm(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Password")
-        newPassword = input("Enter new password: \n")
+        newPassword = self.InputOverride("Enter new password: \n")
         while not self.validator.valid_password(newPassword):
             print("Invalid password. Password must be 12-30 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
-            newPassword = input("Enter new password again: \n")
+            newPassword = self.InputOverride("Enter new password again: \n")
 
         print(f"Updated Password!")
         self.utilities.SleepConsole(1.1)
@@ -231,7 +255,8 @@ class MenuForms:
     
 
 class AddressForm:
-    def __init__(self):
+    def __init__(self, user):
+        self.form = MenuForms(user)
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "Eindhoven", "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen", "Haarlem"]
 
     def DisplayCities(self):
@@ -242,7 +267,7 @@ class AddressForm:
     def SelectCity(self):
         while True:
             try:
-                choice = int(input("Enter the number corresponding to your city: "))
+                choice = int(self.form.InputOverride("Enter the number corresponding to your city: "))
                 if 1 <= choice <= len(self.cities):
                     return self.cities[choice - 1]
                 else:
@@ -251,10 +276,10 @@ class AddressForm:
                 print("Invalid input. Please enter a number.")
 
     def GetAdress(self):
-        streetname = input("Enter Street Name: ")
-        housenumber = input("Enter House Number: ")
+        streetname = self.form.InputOverride("Enter Street Name: ")
+        housenumber = self.form.InputOverride("Enter House Number: ")
         while True:
-            zipcode = input("Enter Zip Code (DDDDXX): ")
+            zipcode = self.form.InputOverride("Enter Zip Code (DDDDXX): ")
             if len(zipcode) == 6 and zipcode[:4].isdigit() and zipcode[4:].isalpha():
                 break
             else:
@@ -267,16 +292,16 @@ class AddressForm:
         return address
     
     def UpdateAdress(self, memberadress):
-        streetname = input("Enter Street Name (or press Enter to skip): ")
+        streetname = self.form.InputOverride("Enter Street Name (or press Enter to skip): ")
         if not streetname:
             return memberadress
 
-        housenumber = input("Enter House Number (or press Enter to skip): ")
+        housenumber = self.form.InputOverride("Enter House Number (or press Enter to skip): ")
         if not housenumber:
             return memberadress
 
         while True:
-            zipcode = input("Enter Zip Code (DDDDXX) (or press Enter to skip): ")
+            zipcode = self.form.InputOverride("Enter Zip Code (DDDDXX) (or press Enter to skip): ")
             if not zipcode:
                 return memberadress
             if len(zipcode) == 6 and zipcode[:4].isdigit() and zipcode[4:].isalpha():
@@ -293,7 +318,7 @@ class AddressForm:
     
     def UpdateCity(self):
         while True:
-            choice = input("Enter the number corresponding to your city (or press Enter to skip): ")
+            choice = self.form.InputOverride("Enter the number corresponding to your city (or press Enter to skip): ")
             if not choice:
                 return None
             try:
