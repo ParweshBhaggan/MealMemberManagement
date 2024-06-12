@@ -86,16 +86,14 @@ class Validators:
             return False
         elif not self._check_password_digit(password, digit_chars):
             print("Password has no digit")
-            return False
-        
+            return False   
         return True
 
     def ValidateNumber(self, number):
-        if(not len(number) == 14):
-            print(f"Invalid mobile phone number. Mobile phone number must be 8 digits long.")
-            return False
-        else:
+        if(len(number) == 14):
             return True
+        print(f"Invalid mobile phone number. Mobile phone number must be 8 digits long.")
+        return False
         
     
     def check_valid_zipcode(self, zipcode):
@@ -123,7 +121,6 @@ class Validators:
             if char not in upper_chars:
                 print("Wrong zipcode format text")
                 return False
-        
         try:
             digits = int(digits)
             return True
@@ -145,10 +142,10 @@ class Validators:
         input_age = age
         try:
             input_age = int(age)
-            if not (0 < input_age <= 111):
-                print("Incorrect age")
-                return False
-            return True
+            if (0 < input_age <= 111):
+                return True
+            print("Incorrect age")
+            return False
         except Exception as e:
             print("Incorrect age format")
             return False

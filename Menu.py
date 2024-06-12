@@ -40,13 +40,16 @@ class MenuFunctions:
         member = self.menuForm.MemberForm()
         if(member is not None):
             self.logged_in_user.services.AddMember(member)
+        self.PrintMember(member)
         return
 
-    def UpdateMember(self):
-        member = self.SearchMember()
+    def UpdateMember(self, member = None):
+        if(member is None):
+            member = self.SearchMember()
         if(member is not None):
             updateMember = self.menuForm.UpdateMemberForm(member)
             self.logged_in_user.services.UpdateMember(updateMember)
+        self.PrintMember(member)
         return
 
     def UpdateCurrentPassword(self):
@@ -59,8 +62,14 @@ class MenuFunctions:
             if self.menuForm.DeleteUserForm(member):
                 self.logged_in_user.services.DeleteMember(member)
                 print(f"Member: {member.firstname} {member.lastname} deleted")
+                self.utilities.SleepConsole(1.5)
         return
 
+    def GetUsers(self):
+        listUsers = self.logged_in_user.services.GetAllUsers()
+        selectedUser = self.menuForm.SelectUserForm(listUsers)
+        return selectedUser
+    
     def SearchUser(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search User")
@@ -74,25 +83,31 @@ class MenuFunctions:
         consultant = self.menuForm.UserForm(Consultant())
         if(consultant is not None):
             self.logged_in_user.services.AddConsultant(consultant)
+        self.PrintUser(consultant)
         return
 
-    def UpdateConsultant(self):
-        consultant = self.SearchUser()
+    def UpdateConsultant(self, consultant = None):
+        if(consultant is None):
+            consultant = self.SearchUser()
         if(consultant is not None):
             updateConId = self.logged_in_user.services.GetConsultantId(consultant)
             updatecons = self.menuForm.UpdateConsultantForm(consultant)
             self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
+        self.PrintUser(updatecons)
         return
 
-    def ResetConsultant(self):
-        consultant = self.SearchUser()
+    def ResetConsultant(self, consultant = None):
+        if(consultant is None):
+            consultant = self.SearchUser()
         if(consultant is not None):
             resetcon = self.menuForm.ResetConsultantForm(consultant)
             self.logged_in_user.services.ResetConsultantPassword(resetcon)
+        self.PrintUser(resetcon)
         return
 
-    def DeleteConsultant(self):
-        consultant = self.SearchUser()
+    def DeleteConsultant(self, consultant = None):
+        if(consultant is None):
+            consultant = self.SearchUser()
         if(consultant is not None):
             if self.menuForm.DeleteUserForm(consultant):
                 self.logged_in_user.services.DeleteConsultant(consultant)
@@ -103,26 +118,32 @@ class MenuFunctions:
         systemAdmin = self.menuForm.UserForm(SystemAdmin())
         if(systemAdmin is not None):
             self.logged_in_user.services.AddAdmin(systemAdmin)
+        self.PrintUser(systemAdmin)
         return
 
-    def UpdateAdmin(self):
-        systemadmin = self.SearchUser()
-        if(systemadmin is not None):
-            updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemadmin)
-            updateadmin = self.menuForm.UpdateAdminForm(systemadmin)
+    def UpdateAdmin(self, systemAdmin = None):
+        if(systemAdmin is None):
+            systemAdmin = self.SearchUser()
+        if(systemAdmin is not None):
+            updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemAdmin)
+            updateadmin = self.menuForm.UpdateAdminForm(systemAdmin)
             print(updateAdminId)
             self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
+        self.PrintUser(updateadmin)
         return
 
-    def ResetAdmin(self):
-        systemAdmin = self.SearchUser()
+    def ResetAdmin(self, systemAdmin = None):
+        if(systemAdmin is None):
+            systemAdmin = self.SearchUser()
         if(systemAdmin is not None):
             resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
             self.logged_in_user.services.ResetAdminPassword(resetadmin)
+        self.PrintUser(resetadmin)
         return
 
-    def DeleteAdmin(self):
-        systemAdmin = self.SearchUser()
+    def DeleteAdmin(self, systemAdmin = None):
+        if(systemAdmin is None):
+            systemAdmin = self.SearchUser()
         if(systemAdmin is not None):
             if self.menuForm.DeleteUserForm(systemAdmin):
                 self.logged_in_user.services.DeleteAdmin(systemAdmin)
@@ -147,6 +168,21 @@ class MenuFunctions:
     def CloseApplication(self):
         self.utilities.QuitApplication()
         return
+    
+    def PrintMember(self, member):
+        self.utilities.ClearConsole()
+        self.menuForm.PrintMemberForm(member)
+        self.utilities.SleepConsole(3)    
+        return
+    
+    def PrintUser(self, user):
+        self.utilities.ClearConsole()
+        self.menuForm.PrintUserForm(user)
+        self.utilities.SleepConsole(3)    
+        return
+    
+    def UpdateOrDelete(self):
+        return self.menuForm.UpdateOrDeleteForm()
 
 
 class MenuController:
@@ -235,7 +271,8 @@ class MenuController:
             else:
                 if selectedOption < index:
                     if selectedOption == 1:
-                        self.menuFunctions.SearchMember()
+                        mem = self.menuFunctions.SearchMember()
+                        self.menuFunctions.PrintMember(mem)
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
                     elif selectedOption == 3:
@@ -271,7 +308,14 @@ class MenuController:
             else:
                 if selectedOption < index:
                     if selectedOption == 1:
-                        self.menuFunctions.SearchMember()
+                        mem = self.menuFunctions.SearchMember()
+                        self.menuFunctions.PrintMember(mem)
+                        choice = self.menuFunctions.UpdateOrDelete()
+                        if choice == 1:
+                            self.menuFunctions.UpdateMember(mem)
+                        elif choice == 2:
+                            self.menuFunctions.DeleteMember(mem)
+                        return
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
                     elif selectedOption == 3:
@@ -279,7 +323,8 @@ class MenuController:
                     elif selectedOption == 4:
                         self.menuFunctions.DeleteMember()
                     elif selectedOption == 5:
-                        self.menuFunctions.SearchUser()
+                        user = self.menuFunctions.SearchUser()
+                        self.menuFunctions.PrintUser(user)
                     elif selectedOption == 6:
                         self.menuFunctions.AddConsultant()
                     elif selectedOption == 7:
@@ -325,7 +370,14 @@ class MenuController:
             else:
                 if selectedOption < index:
                     if selectedOption == 1:
-                        self.menuFunctions.SearchMember()
+                        mem = self.menuFunctions.SearchMember()
+                        self.menuFunctions.PrintMember(mem)
+                        choice = self.menuFunctions.UpdateOrDelete()
+                        if choice == 1:
+                            self.menuFunctions.UpdateMember(mem)
+                        elif choice == 2:
+                            self.menuFunctions.DeleteMember(mem)
+                        return
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
                     elif selectedOption == 3:
@@ -333,7 +385,24 @@ class MenuController:
                     elif selectedOption == 4:
                         self.menuFunctions.DeleteMember()
                     elif selectedOption == 5:
-                        self.menuFunctions.SearchUser()
+                        user = self.menuFunctions.GetUsers()
+                        self.menuFunctions.PrintUser(user)
+                        choice = self.menuFunctions.UpdateOrDelete()   
+                        if user.typeUser == "Consultant":
+                            if choice == 1:
+                                self.menuFunctions.UpdateConsultant(user)
+                            elif choice == 2:
+                                self.menuFunctions.DeleteConsultant(user)
+                            elif choice == 3:
+                                self.menuFunctions.ResetConsultant(user)
+                        else:
+                            if choice == 1:
+                                self.menuFunctions.UpdateAdmin(user)
+                            elif choice == 2:
+                                self.menuFunctions.DeleteAdmin(user)
+                            elif choice == 3:
+                                self.menuFunctions.ResetAdmin(user)
+                        return
                     elif selectedOption == 6:
                         self.menuFunctions.AddConsultant()
                     elif selectedOption == 7:
