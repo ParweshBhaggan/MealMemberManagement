@@ -70,13 +70,22 @@ class MenuFunctions:
         selectedUser = self.menuForm.SelectUserForm(listUsers)
         return selectedUser
     
-    def SearchUser(self):
+    def SearchUser(self, *args):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search User")
         searchTerm = self.menuForm.SearchTermForm()
         listUsers = self.logged_in_user.services.GetAllUsers()
         foundUsers = self.logged_in_user.services.SearchUsersRecursive(listUsers, searchTerm, [])
-        selectedUser = self.menuForm.SelectUserForm(foundUsers)
+        consultantList = []
+        systemAdminList = []
+        if args[0] == "Consultant":
+            consultantList = [user for user in foundUsers if user.typeUser == "Consultant"]
+            selectedUser = self.menuForm.SelectUserForm(consultantList)
+        elif args[0] == "System Admin":
+            systemAdminList = [user for user in foundUsers if user.typeUser == "SystemAdmin"]
+            selectedUser = self.menuForm.SelectUserForm(systemAdminList)
+        else:
+            selectedUser = self.menuForm.SelectUserForm(foundUsers)
         return selectedUser
 
     def AddConsultant(self):
@@ -88,7 +97,7 @@ class MenuFunctions:
 
     def UpdateConsultant(self, consultant = None):
         if(consultant is None):
-            consultant = self.SearchUser()
+            consultant = self.SearchUser("Consultant")
         if(consultant is not None):
             updateConId = self.logged_in_user.services.GetConsultantId(consultant)
             updatecons = self.menuForm.UpdateConsultantForm(consultant)
@@ -98,7 +107,7 @@ class MenuFunctions:
 
     def ResetConsultant(self, consultant = None):
         if(consultant is None):
-            consultant = self.SearchUser()
+            consultant = self.SearchUser("Consultant")
         if(consultant is not None):
             resetcon = self.menuForm.ResetConsultantForm(consultant)
             self.logged_in_user.services.ResetConsultantPassword(resetcon)
@@ -107,7 +116,7 @@ class MenuFunctions:
 
     def DeleteConsultant(self, consultant = None):
         if(consultant is None):
-            consultant = self.SearchUser()
+            consultant = self.SearchUser("Consultant")
         if(consultant is not None):
             if self.menuForm.DeleteUserForm(consultant):
                 self.logged_in_user.services.DeleteConsultant(consultant)
@@ -123,7 +132,7 @@ class MenuFunctions:
 
     def UpdateAdmin(self, systemAdmin = None):
         if(systemAdmin is None):
-            systemAdmin = self.SearchUser()
+            systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
             updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemAdmin)
             updateadmin = self.menuForm.UpdateAdminForm(systemAdmin)
@@ -134,7 +143,7 @@ class MenuFunctions:
 
     def ResetAdmin(self, systemAdmin = None):
         if(systemAdmin is None):
-            systemAdmin = self.SearchUser()
+            systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
             resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
             self.logged_in_user.services.ResetAdminPassword(resetadmin)
@@ -143,7 +152,7 @@ class MenuFunctions:
 
     def DeleteAdmin(self, systemAdmin = None):
         if(systemAdmin is None):
-            systemAdmin = self.SearchUser()
+            systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
             if self.menuForm.DeleteUserForm(systemAdmin):
                 self.logged_in_user.services.DeleteAdmin(systemAdmin)
@@ -162,7 +171,9 @@ class MenuFunctions:
 
     def LogOut(self, isUserLoggedIn):
         isUserLoggedIn =  False
-        #ConsoleSafety(LoginMenu)
+        mess = self.utilities.ConsoleMessage("Logging out...")
+        print(mess)
+        self.utilities.SleepConsole(1.1)
         return isUserLoggedIn
     
     def CloseApplication(self):
@@ -172,13 +183,13 @@ class MenuFunctions:
     def PrintMember(self, member):
         self.utilities.ClearConsole()
         self.menuForm.PrintMemberForm(member)
-        self.utilities.SleepConsole(3)    
+        self.utilities.SleepConsole(1.1)    
         return
     
     def PrintUser(self, user):
         self.utilities.ClearConsole()
         self.menuForm.PrintUserForm(user)
-        self.utilities.SleepConsole(3)    
+        self.utilities.SleepConsole(1.1)    
         return
     
     def UpdateOrDelete(self):
@@ -197,22 +208,22 @@ class MenuController:
         self.userLoggedIn = False
     
     consultantMenu = [
-        "Search member",
-        "Add member",
-        "Update member",
-        "Update password",
+        "Search Member",
+        "Add Member",
+        "Update Member",
+        "Update Password",
         "Log Out"
     ]
     systemAdminMenu = [
-        "Search member",
-        "Add member",
-        "Update member",
-        "Delete member",
-        "Search user",
-        "Add consultant",
-        "Update consultant",
-        "Delete consultant",
-        "Password reset consultant",
+        "Search Member",
+        "Add Member",
+        "Update Member",
+        "Delete Member",
+        "View Users",
+        "Add Consultant",
+        "Update Consultant",
+        "Delete Consultant",
+        "Password Reset Consultant",
         "Update Password",
         "Create Back Up",
         "Retrieve Back Up",
@@ -220,19 +231,19 @@ class MenuController:
         "Log Out"
     ]
     superAdminMenu = [
-        "Search member",
-        "Add member",
-        "Update member",
-        "Delete member",
-        "Search user",
-        "Add consultant",
-        "Password reset consultant",
-        "Update consultant",
-        "Delete consultant",
-        "Add system admin",
-        "Update system admin",
-        "Delete system admin",
-        "Password reset system admin",
+        "Search Member",
+        "Add Member",
+        "Update Member",
+        "Delete Member",
+        "View Users",
+        "Add Consultant",
+        "Password Reset Consultant",
+        "Update Consultant",
+        "Delete Consultant",
+        "Add System Admin",
+        "Update System Admin",
+        "Delete System Admin",
+        "Password Reset System Admin",
         "Create Back Up",
         "Retrieve Back Up",
         "View Logs",
@@ -244,12 +255,13 @@ class MenuController:
         self.utilities.PrintMenuTitle("Menu")
         index = 1
         for item in arr:
-            print(str(index) + " " + item)
+            print(self.utilities.ConsoleMessage(str(index)) + " " + item)
             index+=1
     
       
 
     def ViewConsultantMenu(self):
+        self.utilities.ClearConsole()
         self.CreateMenu(self.consultantMenu)
         self.ConsultantMenuSelection(self.consultantMenu)
     
@@ -258,7 +270,13 @@ class MenuController:
         for item in arr:
             index+=1
         print("===============================")
-        selectedOption = input( "Select option: (Press x to quit)\n")
+        try:
+            mess = self.utilities.ConsoleMessage("Select option: (Enter x to quit)\n")
+            selectedOption = input(mess)
+        except KeyboardInterrupt:
+            print(self.utilities.ErrorMessage("Invalid Key!"))
+            self.utilities.SleepConsole(1.1)
+            self.ViewSuperAdminMenu()
         if(selectedOption == "x"):
             self.menuFunctions.CloseApplication()
             self.canShowMenu = False
@@ -266,7 +284,9 @@ class MenuController:
             try: 
                selectedOption = int(selectedOption)
             except Exception:
-                print("Invalid selection! Retry!")
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
+                self.utilities.SleepConsole(1.1)
                 self.ViewConsultantMenu() 
             else:
                 if selectedOption < index:
@@ -282,11 +302,14 @@ class MenuController:
                     elif selectedOption == 5:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewConsultantMenu()         
 
     
     def ViewSystemAdminMenu(self):
+        self.utilities.ClearConsole()
         self.CreateMenu(self.systemAdminMenu)
         self.SystemAdminMenuSelection(self.systemAdminMenu)
     
@@ -295,7 +318,13 @@ class MenuController:
         for item in arr:
             index+=1
         print("===============================")
-        selectedOption = input( "Select option: (Press x to quit)\n")
+        try:
+            mess = self.utilities.ConsoleMessage("Select option: (Enter x to quit)\n")
+            selectedOption = input(mess)
+        except KeyboardInterrupt:
+            print(self.utilities.ErrorMessage("Invalid Key!"))
+            self.utilities.SleepConsole(1.1)
+            self.ViewSuperAdminMenu()
         if(selectedOption == "x"):
             self.menuFunctions.CloseApplication()
             self.canShowMenu = False
@@ -303,18 +332,21 @@ class MenuController:
             try: 
                selectedOption = int(selectedOption)
             except Exception:
-                print("Invalid selection! Retry!")
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
+                self.utilities.SleepConsole(1.1)
                 self.ViewSystemAdminMenu() 
             else:
                 if selectedOption < index:
                     if selectedOption == 1:
                         mem = self.menuFunctions.SearchMember()
                         self.menuFunctions.PrintMember(mem)
-                        choice = self.menuFunctions.UpdateOrDelete()
-                        if choice == 1:
-                            self.menuFunctions.UpdateMember(mem)
-                        elif choice == 2:
-                            self.menuFunctions.DeleteMember(mem)
+                        if(mem is not None):
+                            choice = self.menuFunctions.UpdateOrDelete()
+                            if choice == 1:
+                                self.menuFunctions.UpdateMember(mem)
+                            elif choice == 2:
+                                self.menuFunctions.DeleteMember(mem)
                         return
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
@@ -323,8 +355,18 @@ class MenuController:
                     elif selectedOption == 4:
                         self.menuFunctions.DeleteMember()
                     elif selectedOption == 5:
-                        user = self.menuFunctions.SearchUser()
+                        user = self.menuFunctions.GetUsers()
                         self.menuFunctions.PrintUser(user)
+                        if user is not None:
+                            if user.typeUser == "Consultant":
+                                choice = self.menuFunctions.UpdateOrDelete()   
+                                if choice == 1:
+                                    self.menuFunctions.UpdateConsultant(user)
+                                elif choice == 2:
+                                    self.menuFunctions.DeleteConsultant(user)
+                                elif choice == 3:
+                                    self.menuFunctions.ResetConsultant(user)
+                        return
                     elif selectedOption == 6:
                         self.menuFunctions.AddConsultant()
                     elif selectedOption == 7:
@@ -344,19 +386,29 @@ class MenuController:
                     elif selectedOption == 14:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewSystemAdminMenu()  
 
     def ViewSuperAdminMenu(self):
+        self.utilities.ClearConsole()
         self.CreateMenu(self.superAdminMenu)
         self.SuperAdminMenuSelection(self.superAdminMenu)
     
     def SuperAdminMenuSelection(self, arr):
+        
         index = 1
         for item in arr:
             index+=1
         print("===============================")
-        selectedOption = input( "Select option: (Press x to quit)\n")
+        try:
+            mess = self.utilities.ConsoleMessage("Select option: (Enter x to quit)\n")
+            selectedOption = input(mess)
+        except KeyboardInterrupt:
+            print(self.utilities.ErrorMessage("Invalid Key!"))
+            self.utilities.SleepConsole(1.1)
+            self.ViewSuperAdminMenu()
         
         if(selectedOption == "x"):
             self.menuFunctions.CloseApplication()
@@ -364,19 +416,22 @@ class MenuController:
         else:
             try: 
                selectedOption = int(selectedOption)
-            except Exception:
-                print("Invalid selection! Retry!")
+            except ValueError:
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
+                self.utilities.SleepConsole(1.1)
                 self.ViewSuperAdminMenu()
             else:
                 if selectedOption < index:
                     if selectedOption == 1:
                         mem = self.menuFunctions.SearchMember()
                         self.menuFunctions.PrintMember(mem)
-                        choice = self.menuFunctions.UpdateOrDelete()
-                        if choice == 1:
-                            self.menuFunctions.UpdateMember(mem)
-                        elif choice == 2:
-                            self.menuFunctions.DeleteMember(mem)
+                        if(mem is not None):
+                            choice = self.menuFunctions.UpdateOrDelete()
+                            if choice == 1:
+                                self.menuFunctions.UpdateMember(mem)
+                            elif choice == 2:
+                                self.menuFunctions.DeleteMember(mem)
                         return
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
@@ -387,21 +442,22 @@ class MenuController:
                     elif selectedOption == 5:
                         user = self.menuFunctions.GetUsers()
                         self.menuFunctions.PrintUser(user)
-                        choice = self.menuFunctions.UpdateOrDelete()   
-                        if user.typeUser == "Consultant":
-                            if choice == 1:
-                                self.menuFunctions.UpdateConsultant(user)
-                            elif choice == 2:
-                                self.menuFunctions.DeleteConsultant(user)
-                            elif choice == 3:
-                                self.menuFunctions.ResetConsultant(user)
-                        else:
-                            if choice == 1:
-                                self.menuFunctions.UpdateAdmin(user)
-                            elif choice == 2:
-                                self.menuFunctions.DeleteAdmin(user)
-                            elif choice == 3:
-                                self.menuFunctions.ResetAdmin(user)
+                        if user is not None:
+                            choice = self.menuFunctions.UpdateOrDelete()   
+                            if user.typeUser == "Consultant":
+                                if choice == 1:
+                                    self.menuFunctions.UpdateConsultant(user)
+                                elif choice == 2:
+                                    self.menuFunctions.DeleteConsultant(user)
+                                elif choice == 3:
+                                    self.menuFunctions.ResetConsultant(user)
+                            else:
+                                if choice == 1:
+                                    self.menuFunctions.UpdateAdmin(user)
+                                elif choice == 2:
+                                    self.menuFunctions.DeleteAdmin(user)
+                                elif choice == 3:
+                                    self.menuFunctions.ResetAdmin(user)
                         return
                     elif selectedOption == 6:
                         self.menuFunctions.AddConsultant()
@@ -428,39 +484,50 @@ class MenuController:
                     elif selectedOption == 17:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewSuperAdminMenu()
 
     def LoginMenu(self):
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Login")
-        print("Type 'close' in username to quit")
-        username = input("Enter username: ")
+        print(self.utilities.ReturnMessage("Type 'close' in username to quit"))
+        
 
-        if username.lower() == "close":
-            self.utilities.QuitApplication()
-            return
+        try:
+            usernameMessage = self.utilities.ConsoleMessage("Enter Username: ")
+            username = input(usernameMessage)
+            if username.lower() == "close":
+                self.utilities.QuitApplication()
+                return
+            passwordMessage = self.utilities.ConsoleMessage("Enter Password: ")
+            password = input(passwordMessage)
+        except KeyboardInterrupt:
+            print(self.utilities.ErrorMessage("Invalid Key!"))
+            self.utilities.SleepConsole(1.1)
+            return self.LoginMenu()
         
-        password = input("Enter password: ")
-        
+            
 
         if username and password:
             self.user_found, self.logged_in_user = self.dbMan.loginUser(username, password)
             if not self.user_found:
-                print("Invalid username or password. Please try again.")
+                print(self.utilities.ErrorMessage("Invalid username or password. Please try again."))
                 self.utilities.SleepConsole(1.1)
                 self.LoginMenu()
             else:
                 
                 self.menuFunctions = MenuFunctions(self.logged_in_user)
                 if self.logged_in_user.typeUser == "SuperAdmin":
-                    print(f"\nLogin successful as Super Admin: {self.logged_in_user.username}")
+                    success_message = self.utilities.SuccessMessage(f"\nLogin successful as Super Admin: {self.logged_in_user.username}")
+                    print(success_message)
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
                     self.ViewMenu()
 
                     
-                    #ConsoleSafety(HomeMenu)
+                   
                 
                 if self.logged_in_user.typeUser == "SystemAdmin":
                     print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
@@ -469,7 +536,7 @@ class MenuController:
                     self.ViewMenu()
 
 
-                    #ConsoleSafety(HomeMenu)
+                   
 
                 if self.logged_in_user.typeUser == "Consultant":
                     print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
@@ -477,7 +544,7 @@ class MenuController:
                     self.utilities.SleepConsole(1.1)
 
                     self.ViewMenu()
-                    #ConsoleSafety(HomeMenu)
+                   
         else:
             print("Username and password cannot be empty.")
             self.LoginMenu()

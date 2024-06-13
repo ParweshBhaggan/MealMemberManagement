@@ -18,11 +18,17 @@ class MenuForms:
 
     def InputOverride(self, message):
         print()
-        print("Type 'back' to return to Menu ")
-        message = input(f"{message}")
+        #print(colored("Type 'back' to return to Menu ", "blue", attrs=['bold']))
+        print(self.utilities.ReturnMessage("Type 'back' to return to Menu"))
+        message = self.utilities.ConsoleMessage(message)
+        try:
+            message = input(f"{message}")
+        except KeyboardInterrupt:
+            print(self.utilities.ErrorMessage("Invalid key!"))
+            return self.InputOverride(message)
         if(message.lower() == "back"):
-            print("Going back to Menu................................")
-            self.utilities.SleepConsole(3)
+            print(self.utilities.ConsoleMessage("Returning to Menu..."))
+            self.utilities.SleepConsole(1.1)
             self.Goback()     
         return message
     
@@ -87,16 +93,17 @@ class MenuForms:
             print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
             lastname =  self.InputOverride("Enter Lastname again: \n")
 
-        age = self.InputOverride("Enter age: \n")
+        age = self.InputOverride("Enter Age: \n")
         while not self.validator.check_valid_age(age):
             print("Invalid age. Age must be a number between 1 and 111.")
-            age = self.InputOverride("Enter age: \n")
+            age = self.InputOverride("Enter Age: \n")
 
 
-        gender = self.InputOverride("Enter Gender (options: male, female, other, prefer not to say): \n")
-        while not self.validator.check_valid_gender(gender):
-            print("Invalid gender. Please enter one of the following options: male, female, non-binary, other, prefer not to say.")
-            gender = self.InputOverride("Enter Gender again: \n")
+       # gender = self.InputOverride("Enter Gender (options: male, female, other, prefer not to say): \n")
+        # while not self.validator.check_valid_gender(gender):
+        #     print("Invalid gender. Please enter one of the following options: male, female, non-binary, other, prefer not to say.")
+        #     gender = self.InputOverride("Enter Gender again: \n")
+        gender = self.SelectGender()
 
 
         weight = self.InputOverride("Enter Weight: \n")
@@ -116,7 +123,7 @@ class MenuForms:
             mobile = "+31-6-" + self.InputOverride("Enter Mobile again without '+316': \n")
         
         member = Member(firstname, lastname, age, gender, weight, address, email, mobile)
-        print(colored('New member successfully added.', 'green'))
+        print(colored('New Member successfully added.', 'green'))
         print(f"Added Member: {member.firstname} {member.lastname}")
         self.utilities.SleepConsole(1.1)
         return member
@@ -132,18 +139,41 @@ class MenuForms:
     
     def SelectUserForm(self, listUser):
         self.utilities.ClearConsole()
-        self.utilities.PrintMenuTitle("Found Users")
+        isUser = False
+        
         if len(listUser) > 0:
             menuItem = 1
+            if hasattr(listUser[0], 'username'):
+                isUser = True
+                self.utilities.PrintMenuTitle("Found Users")
+                optionMsg = self.utilities.ConsoleMessage("Option")
+                usernMsg = self.utilities.SuccessMessage("Username")
+                typeMsg = self.utilities.ErrorMessage("Type")
+                print(f"{optionMsg}  |   {usernMsg}    |   {typeMsg}")
+            else:
+                self.utilities.PrintMenuTitle("Found Members")
+                optionMsg = self.utilities.ConsoleMessage("Option")
+                usernMsg = self.utilities.SuccessMessage("FirstName")
+                typeMsg = self.utilities.ErrorMessage("LastName")
+                print(f"{optionMsg}  |   {usernMsg}    |   {typeMsg}")
             for index in range(0, len(listUser)):
                 if hasattr(listUser[index], 'username'):
-                    print(f"{menuItem} {listUser[index].username}" )
+                    optionMsg = self.utilities.ConsoleMessage(menuItem)
+                    usernMsg = self.utilities.SuccessMessage(listUser[index].username)
+                    typeMsg = self.utilities.ErrorMessage(listUser[index].typeUser)
+                    print(f"{optionMsg}  |   {usernMsg}, {typeMsg}" )
                 else:
-                    print(f"{menuItem} {listUser[index].firstname} {listUser[index].lastname}" )
+                    optionMsg = self.utilities.ConsoleMessage(menuItem)
+                    usernMsg = self.utilities.SuccessMessage(listUser[index].firstname)
+                    typeMsg = self.utilities.ErrorMessage(listUser[index].lastname)
+                    print(f"{optionMsg}  |   {usernMsg}, {typeMsg}" )
                 menuItem +=1
             print("=================================")
             while True:
-                selectedOption = self.InputOverride("Select user: \n")
+                if(isUser):
+                    selectedOption = self.InputOverride("Select User: \n")
+                else:
+                    selectedOption = self.InputOverride("Select Member: \n")
                 if not selectedOption:
                     return None
                 try:
@@ -151,17 +181,27 @@ class MenuForms:
                     if 1 <= selectedOption <= len(listUser):
                         break
                     else:
-                        print(f"Please select a number between 1 and {len(listUser)}.")
+                        mess = self.utilities.ConsoleMessage(f"Please select a number between 1 and {len(listUser)}.")
+                        print(mess)
                 except ValueError:
-                    print("Invalid input. Please enter a number.")
+                    errormsg = self.utilities.ErrorMessage("Invalid input. Please enter a number.")
+                    print(errormsg)
 
             if selectedOption < menuItem:
                 
                 selectedIndex = selectedOption - 1
                 selectedUser = listUser[selectedIndex]
                 self.utilities.ClearConsole()
-                self.utilities.PrintMenuTitle("Selected User")
-                print( "U have selected: "  + selectedUser.firstname)
+                if(isUser):
+                    self.utilities.PrintMenuTitle("Selected User")
+                    usernMsg = self.utilities.SuccessMessage(selectedUser.username)
+                    typeMsg = self.utilities.ErrorMessage(selectedUser.typeUser)
+                    print(f"U have selected: {usernMsg} {typeMsg}" )
+                else:
+                    self.utilities.PrintMenuTitle("Selected Member")
+                    usernMsg = self.utilities.SuccessMessage(selectedUser.firstname)
+                    typeMsg = self.utilities.ErrorMessage(selectedUser.lastname)
+                    print(f"U have selected: {usernMsg} {typeMsg}" )
                 print("=================================")
                 self.utilities.SleepConsole(1.1)
                 return selectedUser
@@ -175,12 +215,12 @@ class MenuForms:
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Delete User")
         if hasattr(user, 'typeUser'):
-            print(f"Are you sure you want to delete the {user.typeUser}: {user.username}? (y/n)")
+            print(f"Are you sure you want to delete {user.typeUser}: {user.username}? (y/n)")
         else:
-            print(f"Are you sure you want to delete the Member: {user.firstname} {user.lastname}? (y/n)")
+            print(f"Are you sure you want to delete Member: {user.firstname} {user.lastname}? (y/n)")
         confirm = input()
         if confirm.lower() == 'y':
-            print("Deleting user...")
+            print("Deleting User...")
             self.utilities.SleepConsole(1.1)
             return True
         else:
@@ -264,6 +304,28 @@ class MenuForms:
         self.utilities.SleepConsole(1.1)
         return consultant
 
+    def SelectGender(self):
+        print("\nGender:\n")
+        gender_options=['Male', 'Female', 'Other', 'Prefer Not To Say']
+        index = 1
+        for item in gender_options:
+            print(f'{str(index)} {item}')
+            index+=1
+        
+        choice = self.InputOverride("Select gender: ")
+        try:
+            choice = int(choice)
+        except ValueError:
+            print(self.utilities.ErrorMessage("Invalid Key!"))
+            self.SelectGender()
+        else:
+            if(choice > len(gender_options) or choice < 0):
+                print(self.utilities.ConsoleMessage("Invalid Option!"))
+                return self.SelectGender()
+            else:        
+                gender = gender_options[choice - 1]
+                print("selected gender: " + gender)
+                return gender
     
     def UpdateMemberForm(self, member):
         self.utilities.ClearConsole()
@@ -278,14 +340,15 @@ class MenuForms:
              print("Invalid lastname. Lastname must be between 2 and 30 characters and can only contain letters, spaces, hyphens, and apostrophes.")
              lastname =  self.InputOverride("Enter Lastname again: \n") or member.lastname
 
-
         age = self.InputOverride(f"Enter Age (or enter to skip): \n") or member.age
         while not self.validator.check_valid_age(age):
             age =  self.InputOverride("Invalid age. Please enter a valid age between 1 and 111: \n") or member.age
 
-        gender = self.InputOverride(f"Enter Gender (or enter to skip): \n") or member.gender
-        while not self.validator.check_valid_gender(gender):
-            gender =  self.InputOverride("Invalid gender. Please enter a valid gender (male, female, other, prefer not to say): \n") or member.gender
+        # gender = self.InputOverride(f"Enter Gender (or enter to skip): \n") or member.gender
+        # while not self.validator.check_valid_gender(gender):
+        #     gender =  self.InputOverride("Invalid gender. Please enter a valid gender (male, female, other, prefer not to say): \n") or member.gender
+
+        gender = self.SelectGender()
 
         weight = self.InputOverride(f"Enter Weight (or enter to skip): \n") or member.weight
         while not self.validator.check_valid_weigth(weight):
@@ -342,7 +405,7 @@ class MenuForms:
     
     def PrintMemberForm(self, member):
         if member is not None:
-            print("Membership ID: " + member.membershipID)
+            print("Membership ID: " + str(member.membershipID))
             print("Firstname: " + member.firstname)
             print("Lastname: " + member.lastname)
             print("Age: " + str(member.age))
@@ -354,7 +417,7 @@ class MenuForms:
             print("Registration date: " + str(member.registrationdate))
             # input("Press (enter) key to go back")
             return
-        print("No member found\nGoing back..............")
+        print("No member found or selected!\nReturning...")
         return
 
     def PrintUserForm(self, user):
@@ -362,7 +425,7 @@ class MenuForms:
             print("Firstname: " + user.firstname)
             print("Lastname: " + user.lastname)
             print("Username: " + user.username)
-            print("Password: " + user.password)
+            #print("Password: " + user.password)
             print("Registration date: " + str(user.registrationdate))
             print("TypeUser: " + user.typeUser)
             # input("Press (enter) key to go back")
@@ -371,21 +434,21 @@ class MenuForms:
         return
     
     def UpdateOrDeleteForm(self):
-        print("\n==========================================================")    
         print("\n===================Updating or Deleting===================")
         print("1 Update")
         print("2 Delete")
         print("3 Reset Password")
-        choice = self.InputOverride("Select: \n")
         while True:
             try:
-                choice = int(self.InputOverride("Select: \n"))
+                choice = int(self.InputOverride("Select Option: \n"))
                 if 1 <= choice <= 3:
                     return choice
                 else:
-                    print(f"Please select a number between 1 and 3.")
+                    mess = self.utilities.ConsoleMessage("Please select a number between 1 and 3.")
+                    print(mess)
             except ValueError:
-                print("Invalid input. Please enter a number.")
+                mess = self.utilities.ErrorMessage("Invalid input. Please enter a number.")
+                print(mess)
     
 
 class AddressForm:
