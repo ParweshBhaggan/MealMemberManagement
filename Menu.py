@@ -284,7 +284,9 @@ class MenuController:
             try: 
                selectedOption = int(selectedOption)
             except Exception:
-                print("Invalid selection! Retry!")
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
+                self.utilities.SleepConsole(1.1)
                 self.ViewConsultantMenu() 
             else:
                 if selectedOption < index:
@@ -300,7 +302,9 @@ class MenuController:
                     elif selectedOption == 5:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewConsultantMenu()         
 
     
@@ -328,7 +332,9 @@ class MenuController:
             try: 
                selectedOption = int(selectedOption)
             except Exception:
-                print("Invalid selection! Retry!")
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
+                self.utilities.SleepConsole(1.1)
                 self.ViewSystemAdminMenu() 
             else:
                 if selectedOption < index:
@@ -380,7 +386,9 @@ class MenuController:
                     elif selectedOption == 14:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewSystemAdminMenu()  
 
     def ViewSuperAdminMenu(self):
@@ -409,7 +417,8 @@ class MenuController:
             try: 
                selectedOption = int(selectedOption)
             except ValueError:
-                print("Invalid selection! Retry!")
+                mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                print(mess)
                 self.utilities.SleepConsole(1.1)
                 self.ViewSuperAdminMenu()
             else:
@@ -475,7 +484,9 @@ class MenuController:
                     elif selectedOption == 17:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
-                    print("Invalid selection! Retry!")
+                    mess = self.utilities.ErrorMessage("Invalid selection! Retry!")
+                    print(mess)
+                    self.utilities.SleepConsole(1.1)
                     self.ViewSuperAdminMenu()
 
     def LoginMenu(self):
