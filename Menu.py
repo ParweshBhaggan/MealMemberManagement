@@ -56,8 +56,9 @@ class MenuFunctions:
         newPass = self.menuForm.UpdatePasswordForm()
         self.logged_in_user.services.UpdatePassword(newPass)
 
-    def DeleteMember(self):
-        member = self.SearchMember()
+    def DeleteMember(self, member = None):
+        if(member is None):
+            member = self.SearchMember()
         if(member is not None):
             if self.menuForm.DeleteUserForm(member):
                 self.logged_in_user.services.DeleteMember(member)
@@ -192,8 +193,8 @@ class MenuFunctions:
         self.utilities.SleepConsole(1.1)    
         return
     
-    def UpdateOrDelete(self):
-        return self.menuForm.UpdateOrDeleteForm()
+    def UpdateOrDelete(self, *args):
+        return self.menuForm.UpdateOrDeleteForm(*args)
 
 
 class MenuController:
@@ -293,6 +294,13 @@ class MenuController:
                     if selectedOption == 1:
                         mem = self.menuFunctions.SearchMember()
                         self.menuFunctions.PrintMember(mem)
+                        if(mem is not None):
+                            choice = self.menuFunctions.UpdateOrDelete(mem)
+                            if choice == 1:
+                                self.menuFunctions.UpdateMember(mem)
+                            elif choice == 2:
+                                self.menuFunctions.DeleteMember(mem)
+                        return
                     elif selectedOption == 2:
                         self.menuFunctions.AddMember()
                     elif selectedOption == 3:
@@ -342,7 +350,7 @@ class MenuController:
                         mem = self.menuFunctions.SearchMember()
                         self.menuFunctions.PrintMember(mem)
                         if(mem is not None):
-                            choice = self.menuFunctions.UpdateOrDelete()
+                            choice = self.menuFunctions.UpdateOrDelete(mem)
                             if choice == 1:
                                 self.menuFunctions.UpdateMember(mem)
                             elif choice == 2:
@@ -359,7 +367,7 @@ class MenuController:
                         self.menuFunctions.PrintUser(user)
                         if user is not None:
                             if user.typeUser == "Consultant":
-                                choice = self.menuFunctions.UpdateOrDelete()   
+                                choice = self.menuFunctions.UpdateOrDelete(user)   
                                 if choice == 1:
                                     self.menuFunctions.UpdateConsultant(user)
                                 elif choice == 2:
@@ -427,7 +435,7 @@ class MenuController:
                         mem = self.menuFunctions.SearchMember()
                         self.menuFunctions.PrintMember(mem)
                         if(mem is not None):
-                            choice = self.menuFunctions.UpdateOrDelete()
+                            choice = self.menuFunctions.UpdateOrDelete(mem)
                             if choice == 1:
                                 self.menuFunctions.UpdateMember(mem)
                             elif choice == 2:
@@ -443,7 +451,7 @@ class MenuController:
                         user = self.menuFunctions.GetUsers()
                         self.menuFunctions.PrintUser(user)
                         if user is not None:
-                            choice = self.menuFunctions.UpdateOrDelete()   
+                            choice = self.menuFunctions.UpdateOrDelete(user)   
                             if user.typeUser == "Consultant":
                                 if choice == 1:
                                     self.menuFunctions.UpdateConsultant(user)
