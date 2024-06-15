@@ -466,7 +466,7 @@ class MenuForms:
                 if 1 <= choice <= len(menu_items):
                     return choice
                 else:
-                    mess = self.utilities.ConsoleMessage("Please select a number between 1 and 3.")
+                    mess = self.utilities.ConsoleMessage(f"Please select a number corresponding with the options given.")
                     print(mess)
             except ValueError:
                 mess = self.utilities.ErrorMessage("Invalid input. Please enter a number.")

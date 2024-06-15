@@ -4,8 +4,6 @@ from UserServices import UserServices
 
 
 class User:
-    consultants = list()
-    members = list()
     def __init__(self, *args):
         if(len(args) > 2):
             self.firstname = args[0]
