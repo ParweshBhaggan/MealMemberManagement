@@ -1,73 +1,89 @@
+from datetime import datetime
 import glob
 import os
 import shutil
 import zipfile
 
-def create_backup():
-    '''Function that checks if there is a backup folder, if not make on
-        copy files to the folder, zip the folder, delete the non zipped folder
-        '''
-    count = 1
-    backup_folder_name = ""
-    while True:
-        backup_folder_name = "Backup_" + str(count) 
-        if not os.path.exists(backup_folder_name) and not os.path.exists(backup_folder_name + ".zip"):
-            os.makedirs(backup_folder_name)
-            break
-        count += 1
+class BackupSystem:
+    def __init__(self):
+        self.backup_folder = "Backupfolder"
+        self.backups = self.GetBackupFolders()
 
-    # copy files 
-    backup_files = ["public_key.pem", "private_key.pem", "Fitness_db.db"]
-    for file in backup_files:
-        _path = os.path.join(os.getcwd(), file)
-        get_backup_path = os.path.join(os.getcwd(), backup_folder_name, file)
-        if os.path.isfile(_path):
-            shutil.copy2(_path, get_backup_path)
+    def create_backup(self):
+        count = 1
+        backup_folder_name = ""
+        
+        if not os.path.exists(self.backup_folder):
+            os.makedirs(self.backup_folder)
+        
+        while True:
+            backup_folder_name = f"Backup_{count}"
+            backup_folder_path = os.path.join(self.backup_folder, backup_folder_name)
+            if not os.path.exists(backup_folder_path) and not os.path.exists(backup_folder_path + ".zip"):
+                os.makedirs(backup_folder_path)
+                break
+            count += 1
+        
+        # copy files 
+        backup_files = ["Mealmembermanagement.log", "MealMemberManagement.db"]
+        for file in backup_files:
+            _path = os.path.join(os.getcwd(), file)
+            get_backup_path = os.path.join(backup_folder_path, file)
+            if os.path.isfile(_path):
+                shutil.copy2(_path, get_backup_path)
 
-    # zip backup folder
-    _zip = backup_folder_name + ".zip"
-    try:
-        with zipfile.ZipFile(_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for _root, _dirs, _files in os.walk(backup_folder_name):
-                for f in _files:
-                    _path_of_folder = os.path.join(_root, f)
-                    zipf.write(_path_of_folder, os.path.relpath(_path_of_folder, backup_folder_name))
-    except Exception as e:
-        print(f"Exception: {str(e)}")
+        # zip backup folder
+        _zip = os.path.join(self.backup_folder, backup_folder_name + ".zip")
+        try:
+            with zipfile.ZipFile(_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for _root, _dirs, _files in os.walk(backup_folder_path):
+                    for f in _files:
+                        _path_of_folder = os.path.join(_root, f)
+                        zipf.write(_path_of_folder, os.path.relpath(_path_of_folder, backup_folder_path))
+        except Exception as e:
+            print(f"Exception: {str(e)}")
 
-    # delete unzipped folder
-    shutil.rmtree(backup_folder_name)
-
-
-def restore():
-    '''This function will search for the latest backup folder
-        create a folder
-        extract the backup folder and save in created folder
-        delete empty backup folder'''
+        # delete unzipped folder
+        shutil.rmtree(backup_folder_path)
     
-    zipped_folders = sorted(glob.glob("Backup_*.zip"))
-    if len(zipped_folders) == 0:
-        print("There are no backup folders")
-        return
-    get_zipped_folder = zipped_folders[-1]
+    
 
-    # create folder
-    get_path = os.path.splitext(get_zipped_folder)[0]
-    os.makedirs(get_path, exist_ok=True)
+    def GetBackupFolders(self):
+        '''Retrieve the list of backup folders in the backup folder'''
+        try:
+            return [f for f in os.listdir(self.backup_folder) if f.endswith('.zip')]
+        except FileNotFoundError:
+            print(f"The backup folder '{self.backup_folder}' does not exist.")
+            return []
 
-    # unzip folder
-    try:
-        with zipfile.ZipFile(get_zipped_folder, 'r') as zipf:
-            zipf.extractall(get_path)
-    except Exception as e:
-        print(f"Exception: {str(e)}")
-     
-    # copy files to created folder
-    for root, file, files in os.walk(get_path):
-        for file in files:
-            folder_path = os.path.join(root, file)
-            destination_path = os.path.join(os.getcwd(), file)
-            shutil.copy2(folder_path, destination_path)
 
-    # delete empty folder
-    shutil.rmtree(get_path)
+    def restore(self, backupname):
+        # Find the latest backup zip file
+        get_zipped_folder = os.path.join(self.backup_folder, backupname)
+
+        # Check if the zip file exists
+        if not os.path.exists(get_zipped_folder):
+            print(f"The backup file '{get_zipped_folder}' does not exist.")
+            return
+
+        # Create a folder to extract the backup
+        get_path = os.path.splitext(get_zipped_folder)[0]
+        os.makedirs(get_path, exist_ok=True)
+
+        # Unzip the folder
+        try:
+            with zipfile.ZipFile(get_zipped_folder, 'r') as zipf:
+                zipf.extractall(get_path)
+        except Exception as e:
+            print(f"Exception: {str(e)}")
+            return
+        
+        # Copy files to the original location, overwriting if they exist
+        for root, _, files in os.walk(get_path):
+            for file in files:
+                folder_path = os.path.join(root, file)
+                destination_path = os.path.join(os.getcwd(), file)
+                shutil.copy2(folder_path, destination_path)
+
+        # Delete the extracted backup folder
+        shutil.rmtree(get_path)
