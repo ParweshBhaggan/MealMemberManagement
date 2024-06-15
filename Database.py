@@ -321,22 +321,26 @@ class  DatabaseManager:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
             decrypted_username = self.security.decrypt_data(res[3])
-            decrypted_password = self.security.decrypt_data(res[4])
+            decrypted_password = res[4]
             decrypted_registrationdate = self.security.decrypt_data(res[5])
             
             systemAdmin = SystemAdmin(decrypted_firstname, decrypted_lastname, decrypted_username, decrypted_password)
             systemAdmin.registrationdate = decrypted_registrationdate
+            systemAdmin.id = res[0]
             listUsers.append(systemAdmin)
         
         for res in listCons:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
             decrypted_username = self.security.decrypt_data(res[3])
-            decrypted_password = self.security.decrypt_data(res[4])
+            decrypted_password = res[4]
             decrypted_registrationdate = self.security.decrypt_data(res[5])
+            
             
             consultant = Consultant(decrypted_firstname, decrypted_lastname, decrypted_username, decrypted_password)
             consultant.registrationdate = decrypted_registrationdate
+            consultant.id = res[0]
+
             listUsers.append(consultant)
 
         con.close()
@@ -364,7 +368,7 @@ class  DatabaseManager:
             
             member = Member(decrypted_firstname, decrypted_lastname, decrypted_age, decrypted_gender, decrypted_weight, decrypted_address, decrypted_email, decrypted_mobile)
             # member.membershipID = decrypted_membershipID
-            member.membershipID = mem[0]
+            member.membershipID = decrypted_membershipID
             listUsers.append(member)
         con.close()
         return listUsers
@@ -421,7 +425,7 @@ class  DatabaseManager:
     
     def FetchConsultantID(self, user):
         '''Get specific ID data of Consultant from the database.'''
-        username = self.security.encrypt_data(user.username)
+        username = ""
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""

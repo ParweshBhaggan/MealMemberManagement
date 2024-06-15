@@ -71,6 +71,8 @@ class MenuFunctions:
                 self.logged_in_user.services.DeleteMember(member)
                 print(f"Member: {member.firstname} {member.lastname} deleted")
                 self.utilities.SleepConsole(1.5)
+            return
+        self.PrintMember(None)
         return
 
     def GetUsers(self):
@@ -111,7 +113,7 @@ class MenuFunctions:
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
-            updateConId = self.logged_in_user.services.GetConsultantId(consultant)
+            updateConId = consultant.id
             updatecons = self.menuForm.UpdateConsultantForm(consultant)
             self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
             self.PrintUser(updatecons)
@@ -139,6 +141,8 @@ class MenuFunctions:
             if self.menuForm.DeleteUserForm(consultant):
                 self.logged_in_user.services.DeleteConsultant(consultant)
                 print(f"{consultant.typeUser}: {consultant.username} deleted")
+            return
+        self.PrintUser(None)
         return
 
     def AddAdmin(self):
@@ -184,6 +188,8 @@ class MenuFunctions:
             if self.menuForm.DeleteUserForm(systemAdmin):
                 self.logged_in_user.services.DeleteAdmin(systemAdmin)
                 print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
+                return
+        self.PrintUser(None)
         return
 
     def CreateBackUp(self):
