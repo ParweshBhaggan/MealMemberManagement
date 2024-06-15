@@ -1,13 +1,13 @@
 import sqlite3
 from Members import Member
-
+from Encryption import EncryptionHandler
 class  DatabaseManager:
     dbname = "MealMemberManagement.db" 
 
     def __init__(self):
         
         self.con = sqlite3.connect(self.dbname)
-
+        self.security = EncryptionHandler() 
         self.cur = self.con.cursor()
         self.CreateMemberTable()
         self.CreateSystemAdminTable()
