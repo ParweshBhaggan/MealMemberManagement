@@ -84,7 +84,7 @@ class UserServices:
             return foundMember
         getMemberAttr = list(members[itemIndex].__dict__.values())
         for attr in range(0, len(getMemberAttr) - 1):
-            # attr is a value of an item attribute for example: item.firstname = attr[0]
+           
             if str(getMemberAttr[attr]).lower().__contains__(searchVal.lower()):
                 foundMember.append(members[itemIndex])
                 break
@@ -94,12 +94,12 @@ class UserServices:
         '''Service for searching a User'''
         if searchVal == "":
             searchVal = input("Search: ")
-            # return self.SearchRecursive(arr, searchVal, foundUser, itemIndex)
+            
         if itemIndex >= len(users):
             return foundUser
         getUserAttr = list(users[itemIndex].__dict__.values())
         for attr in range(0, len(getUserAttr) - 4):
-            # attr is a value of an item attribute for example: item.firstname = attr[0]
+          
             if str(getUserAttr[attr]).lower().__contains__(searchVal.lower()):
                 foundUser.append(users[itemIndex])
                 break

@@ -14,7 +14,6 @@ class User:
             self.registrationdate = date.today()
         self.services = UserServices(self)
         self.typeUser = self.__class__.__name__
-            # log("Changethis", f'New {typeUser} user is created', f'username: {self.username}')
 
 class SystemAdmin(User):
     '''The class model of System Admin'''

@@ -4,7 +4,7 @@ import re
 
 class Validators:
     """Validation handler class, that handles the validation of inputs"""
-    #public functions
+    
     def create_id(sellf):
         """ Generates an unique ID based on certain criterias """
         current_datetime = datetime.datetime.now()

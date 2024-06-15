@@ -482,7 +482,6 @@ class MenuForms:
             print("Weight: " + str(member.weight))
             print("Mobile: " + member.mobile)
             print("Registration date: " + str(member.registrationdate))
-            # input("Press (enter) key to go back")
             return
         print("No member found or selected!\nReturning...")
         return
@@ -493,10 +492,8 @@ class MenuForms:
             print("Firstname: " + user.firstname)
             print("Lastname: " + user.lastname)
             print("Username: " + user.username)
-            #print("Password: " + user.password)
             print("Registration date: " + str(user.registrationdate))
             print("TypeUser: " + user.typeUser)
-            # input("Press (enter) key to go back")
             return
         print("No User found\nGoing back..............")
         return

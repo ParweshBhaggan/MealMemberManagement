@@ -120,7 +120,7 @@ class  DatabaseManager:
             INSERT INTO Consultant (firstname, lastname, username, password, registrationdate)
             VALUES (?, ?, ?, ?, ?);
         """,
-        #encr
+        
           (user.firstname, user.lastname, user.username, user.password, user.registrationdate))
         con.commit()
         con.close()
