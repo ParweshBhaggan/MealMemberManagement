@@ -23,7 +23,7 @@ def log(username, description, additional_info="", suspicious="No"):
         if log_number == 1:
             header = "No. Date, Time, Username, Description activity, Additional Information, Suspicious\n"
             file.write(header)
-        file.write(log_message)
+        file.write(str(log_message))
 
 
 def next_log_number(log_file):
