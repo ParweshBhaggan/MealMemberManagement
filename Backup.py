@@ -1,15 +1,15 @@
-from datetime import datetime
-import glob
 import os
 import shutil
 import zipfile
 
 class BackupSystem:
+    '''This class handles Backup.'''
     def __init__(self):
         self.backup_folder = "Backupfolder"
-       # self.backups = self.GetBackupFolders()
+      
 
     def create_backup(self):
+        '''Create back up function.'''
         count = 1
         backup_folder_name = ""
         
@@ -49,7 +49,7 @@ class BackupSystem:
     
 
     def GetBackupFolders(self):
-        '''Retrieve the list of backup folders in the backup folder'''
+        '''Retrieve the list of backup folders in the backup folder.'''
         try:
             return [f for f in os.listdir(self.backup_folder) if f.endswith('.zip')]
         except FileNotFoundError:
@@ -58,6 +58,7 @@ class BackupSystem:
 
 
     def restore(self, backupname):
+        '''Retrieve the list of backup files in the backup folder.'''
         # Find the latest backup zip file
         get_zipped_folder = os.path.join(self.backup_folder, backupname)
 

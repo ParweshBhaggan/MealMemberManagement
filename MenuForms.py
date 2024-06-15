@@ -10,6 +10,7 @@ from Utilities import Utilities
 
 
 class MenuForms:
+    '''This class handles the functions of different type of forms'''
     def __init__(self, user) -> None:
         self.loggedInUser = user
         self.validator = Validators()
@@ -18,8 +19,8 @@ class MenuForms:
         
 
     def InputOverride(self, message):
+        '''Is an override function for standard input() function'''
         print()
-        #print(colored("Type 'back' to return to Menu ", "blue", attrs=['bold']))
         print(self.utilities.ReturnMessage("Type 'back' to return to Menu"))
         message = self.utilities.ConsoleMessage(message)
         try:
@@ -30,10 +31,11 @@ class MenuForms:
         if(message.lower() == "back"):
             print(self.utilities.ConsoleMessage("Returning to Menu..."))
             self.utilities.SleepConsole(1.1)
-            self.Goback()     
+            self.ReturnToHome()     
         return message
     
-    def Goback(self):
+    def ReturnToHome(self):
+        '''Function that navigates back to the home menu'''
         from Menu import MenuController,MenuFunctions
         self.menu = MenuController()
         self.menu.logged_in_user = self.loggedInUser
@@ -43,6 +45,7 @@ class MenuForms:
         return
 
     def UserForm(self, user):
+        '''The form for creating a new User'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("User Form")
 
@@ -85,6 +88,8 @@ class MenuForms:
 
 
     def MemberForm(self):
+        '''The form for creating a new Member'''
+
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Member Form")
 
@@ -139,6 +144,7 @@ class MenuForms:
 
         
     def SearchTermForm(self):
+        '''The form for searching Users/Members'''
         search_type = self.InputOverride("Enter search term: \n")
         
         if search_type == '':
@@ -148,11 +154,13 @@ class MenuForms:
         return search_type
     
     def SelectUserForm(self, listUser):
+        '''The form for selecting specific found Users/Members'''
         self.utilities.ClearConsole()
         isUser = False
         
         if len(listUser) > 0:
             menuItem = 1
+            #if listUser has user
             if hasattr(listUser[0], 'username'):
                 isUser = True
                 self.utilities.PrintMenuTitle("Found Users")
@@ -160,18 +168,26 @@ class MenuForms:
                 usernMsg = self.utilities.SuccessMessage("Username")
                 typeMsg = self.utilities.ErrorMessage("Type")
                 print(f"{optionMsg}  |   {usernMsg}    |   {typeMsg}")
+            
+            #if listUser has Member
             else:
                 self.utilities.PrintMenuTitle("Found Members")
                 optionMsg = self.utilities.ConsoleMessage("Option")
                 usernMsg = self.utilities.SuccessMessage("FirstName")
                 typeMsg = self.utilities.ErrorMessage("LastName")
                 print(f"{optionMsg}  |   {usernMsg}    |   {typeMsg}")
+            
+            
             for index in range(0, len(listUser)):
+                
+                #display each User in list
                 if hasattr(listUser[index], 'username'):
                     optionMsg = self.utilities.ConsoleMessage(menuItem)
                     usernMsg = self.utilities.SuccessMessage(listUser[index].username)
                     typeMsg = self.utilities.ErrorMessage(listUser[index].typeUser)
                     print(f"{optionMsg}  |   {usernMsg}, {typeMsg}" )
+                
+                #display each Member in list
                 else:
                     optionMsg = self.utilities.ConsoleMessage(menuItem)
                     usernMsg = self.utilities.SuccessMessage(listUser[index].firstname)
@@ -180,12 +196,16 @@ class MenuForms:
                 menuItem +=1
             print("=================================")
             while True:
+
+                #prompt the selection
                 if(isUser):
                     selectedOption = self.InputOverride("Select User: \n")
                 else:
                     selectedOption = self.InputOverride("Select Member: \n")
                 if not selectedOption:
                     return None
+                
+                #handle selection errors
                 try:
                     selectedOption = int(selectedOption)
                     if 1 <= selectedOption <= len(listUser):
@@ -197,6 +217,7 @@ class MenuForms:
                     errormsg = self.utilities.ErrorMessage("Invalid input. Please enter a number.")
                     print(errormsg)
 
+            #if selected
             if selectedOption < menuItem:
                 
                 selectedIndex = selectedOption - 1
@@ -222,8 +243,10 @@ class MenuForms:
                 print("Wrong option! Retry!")
                 self.utilities.SleepConsole(1.1)
                 self.SelectUserForm(listUser)
+
     
     def DeleteUserForm(self, user):
+        '''The form for deleting a user'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Delete User")
         if hasattr(user, 'typeUser'):
@@ -239,8 +262,10 @@ class MenuForms:
             print("User deletion cancelled.")
             self.utilities.SleepConsole(1.1)
             return False
+        
     
     def ResetConsultantForm(self, consultant):
+        '''The form for password resetting a Consultant'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Reset Consultant Password")
         password = self.InputOverride(f"Enter new Password for '{consultant.username}': \n")
@@ -254,6 +279,7 @@ class MenuForms:
         return consultant
     
     def ResetAdminForm(self, admin):
+        '''The form for password resetting a System Admin'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Reset Admin Password")
         password = self.InputOverride(f"Enter new Password for '{admin.username}': \n")
@@ -267,6 +293,7 @@ class MenuForms:
         return admin
     
     def UpdateAdminForm(self, admin):
+        '''The form for updating a System Admin'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Admin Form")
         
@@ -297,6 +324,7 @@ class MenuForms:
 
     
     def UpdateConsultantForm(self, consultant):
+        '''The form for updating a Consultant'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Consultant Form")
         
@@ -328,6 +356,7 @@ class MenuForms:
 
 
     def SelectGender(self):
+        '''Handles the selection of gender section'''
         print("\nGender:\n")
         gender_options=['Male', 'Female', 'Other', 'Prefer Not To Say']
         index = 1
@@ -353,6 +382,7 @@ class MenuForms:
                 return gender
     
     def UpdateMemberForm(self, member):
+        '''The form for updating a Member'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Member Form")
         
@@ -412,6 +442,7 @@ class MenuForms:
 
 
     def UpdatePasswordForm(self):
+        '''The form for updating a Password of a user'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Update Password")
         
@@ -439,6 +470,7 @@ class MenuForms:
 
     
     def PrintMemberForm(self, member):
+        '''Displays a Member in the console'''
         if member is not None:
             print("Membership ID: " + str(member.membershipID))
             print("Firstname: " + member.firstname)
@@ -456,6 +488,7 @@ class MenuForms:
         return
 
     def PrintUserForm(self, user):
+        '''Displays a User in the console'''
         if user is not None:
             print("Firstname: " + user.firstname)
             print("Lastname: " + user.lastname)
@@ -469,6 +502,7 @@ class MenuForms:
         return
     
     def UpdateOrDeleteForm(self, *args):
+        '''The form after selecting a user or member'''
         print("\n===================Updating or Deleting===================")
         user = None
         menu_items = None
@@ -510,6 +544,7 @@ class MenuForms:
                 print(mess)
 
     def CreateBackupForm(self):
+        '''The form for creating a back up'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Creating Backup")
         print("1 Create a backup")
@@ -537,6 +572,7 @@ class MenuForms:
                 print(mess)
 
     def RetrieveBackupForm(self):
+        '''The form for retrieving a back up'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Retrieve Backup")
         print("Are you sure you want to retrieve the backup? (y/n)")
@@ -551,6 +587,7 @@ class MenuForms:
             return False
 
     def DisplayAndSelectBackups(self, backups):
+        '''The form for that displays multiple existing back up data'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Restore Backup")
         print("Select a backup from the list below:")
@@ -573,6 +610,7 @@ class MenuForms:
     
 
 class AddressForm:
+    '''This class handles how the adress section functions'''
     validator = Validators()
     def __init__(self, user):
         self.user = user
@@ -580,11 +618,13 @@ class AddressForm:
         self.cities = ["Amsterdam", "Rotterdam", "Utrecht", "Eindhoven", "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen", "Haarlem"]
 
     def DisplayCities(self):
+        '''Displays selection of cities'''
         print("Select a city from the list below:")
         for index, city in enumerate(self.cities, start=1):
             print(f"{index}. {city}")
 
     def SelectCity(self):
+        '''Returns selected city'''
         while True:
             try:
                 choice = int(self.form.InputOverride("Enter the number corresponding to your city: "))
@@ -598,6 +638,7 @@ class AddressForm:
                 log(self.user.username, "Input validation failure: Invalid input entered", "InputValidationFailure")
 
     def GetAdress(self):
+        '''Handles entering the adress'''
         streetname = self.form.InputOverride("Enter Street Name: \n")
         while not self.validator.is_valid_street_name(streetname):
             print("Invalid street name. It should contain only letters and spaces.")
@@ -626,6 +667,7 @@ class AddressForm:
         return address
     
     def UpdateAdress(self, memberadress):
+        '''Handles updating the adress'''
         streetname = self.form.InputOverride("Enter Street Name (or press Enter to skip): \n")
         if not streetname:
             return memberadress
@@ -663,6 +705,7 @@ class AddressForm:
         return f"{streetname} {housenumber}, {zipcode} {city}"
     
     def UpdateCity(self):
+        '''Handles updating the city'''
         while True:
             choice = self.form.InputOverride("Enter the number corresponding to your city (or press Enter to skip): \n")
             if not choice:
