@@ -1,4 +1,4 @@
-from Logger import log
+from Logger import log, logViewer
 from MenuForms import MenuForms
 from User import Consultant, SystemAdmin
 from Utilities import Utilities
@@ -160,14 +160,22 @@ class MenuFunctions:
         return
 
     def CreateBackUp(self):
+        if self.menuForm.CreateBackupForm():
+            self.logged_in_user.services.CreateBackup()
         return
 
     def RetrieveBackup(self):
+        backups = self.logged_in_user.services.GetBackups()
+        backup = self.menuForm.DisplayAndSelectBackups(backups)
+        if self.menuForm.RetrieveBackupForm():
+            self.logged_in_user.services.RetrieveBackup(backup)
+            print(f"Backup '{backup}' restored successfully.")
+            self.utilities.SleepConsole(3)
         return
 
     def SearchLog(self):
-        pass
-        #logViewer()
+        self.utilities.ClearConsole()
+        logViewer()
 
     def LogOut(self, isUserLoggedIn):
         isUserLoggedIn =  False
