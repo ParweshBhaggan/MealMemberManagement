@@ -2,6 +2,7 @@ import sqlite3
 from Members import Member
 from Encryption import EncryptionHandler, HashHandler
 class  DatabaseManager:
+    '''This class handles database actions.'''
     dbname = "MealMemberManagement.db" 
 
     def __init__(self):
@@ -19,6 +20,7 @@ class  DatabaseManager:
 ################################################################################################
 # TABLES here below 
     def CreateMemberTable(self):
+        '''Creates table: Member.'''
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS Member(
             membershipID VARCHAR(255) PRIMARY KEY NOT NULL,
@@ -35,6 +37,8 @@ class  DatabaseManager:
     """)
 
     def CreateSystemAdminTable(self):
+        '''Creates table: System Admin.'''
+
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS SystemAdmin(
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -47,6 +51,8 @@ class  DatabaseManager:
     """)
 
     def CreateConsultantTable(self):
+        '''Creates table: Consult.'''
+
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS Consultant (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -61,6 +67,7 @@ class  DatabaseManager:
 ################################################################################################
 # LOGIN here below 
     def loginUser(self, username, password):
+        '''Login from the database.'''
         from User import Consultant, SuperAdmin, SystemAdmin
 
         con = sqlite3.connect(self.dbname)
@@ -96,6 +103,7 @@ class  DatabaseManager:
 ################################################################################################
 # CREATE here below   
     def createMember(self, member):
+        '''Insert Data: Member.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
@@ -106,16 +114,20 @@ class  DatabaseManager:
         con.close()
 
     def createConsultant(self,user):
+        '''Insert Data: Consult.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
             INSERT INTO Consultant (firstname, lastname, username, password, registrationdate)
             VALUES (?, ?, ?, ?, ?);
-        """, (user.firstname, user.lastname, user.username, user.password, user.registrationdate))
+        """,
+        
+          (user.firstname, user.lastname, user.username, user.password, user.registrationdate))
         con.commit()
         con.close()
 
     def createSystemAdmin(self,user):
+        '''Insert Data: System Admin.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
@@ -128,6 +140,7 @@ class  DatabaseManager:
 ################################################################################################
 # UPDATE here below 
     def updateMember(self, member):
+        '''Update Data: Member.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
@@ -139,6 +152,7 @@ class  DatabaseManager:
         con.close()
 
     def updateConsultant(self, user, id):
+        '''Update Data: Consultant.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
@@ -150,6 +164,7 @@ class  DatabaseManager:
         con.close()
 
     def updateSystemAdmin(self,user, id):
+        '''Update Data: System Admin.'''
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
@@ -163,6 +178,7 @@ class  DatabaseManager:
 ################################################################################################
 # RESET here below     
     def resetPassword(self,newpassword, username):
+        '''Reset password of System Admin.'''
         name = self.security.encrypt_data(username)
         password = self.hash_handler.hash_password(newpassword)
         con = sqlite3.connect(self.dbname)
@@ -176,6 +192,7 @@ class  DatabaseManager:
         con.close()
 
     def resetConsultantPassword(self, consultant):
+        '''Reset password of Consultant.'''
         username = self.security.encrypt_data(consultant.username)
         password = self.hash_handler.hash_password(consultant.password)
         con = sqlite3.connect(self.dbname)
@@ -189,6 +206,7 @@ class  DatabaseManager:
         con.close()
 
     def resetSystemAdminPassword(self,sytemadmin):
+        '''Reset password of System Admin.'''
         username = self.security.encrypt_data(sytemadmin.username)
         password = self.hash_handler.hash_password(sytemadmin.password)
         con = sqlite3.connect(self.dbname)
@@ -204,6 +222,7 @@ class  DatabaseManager:
 ################################################################################################
 # DELETE here below
     def deleteMember(self, member):
+        '''Delete Data: Member.'''
         ID = self.security.encrypt_data(member.membershipID)
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
@@ -215,6 +234,7 @@ class  DatabaseManager:
         con.close()
 
     def deleteConsultant(self, consultant):
+        '''Delete Data: Consultant.'''
         username = self.security.encrypt_data(consultant.username)
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
@@ -227,6 +247,7 @@ class  DatabaseManager:
 
 
     def deleteSystemAdmin(self,systemadmin):
+        '''Delete Data: System Admin.'''
         username = self.encrypt_data(systemadmin.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -240,6 +261,7 @@ class  DatabaseManager:
 ################################################################################################
 # GET here below
     def getallUsers(self):
+        '''Get all Users from the database.'''
         from User import SystemAdmin,Consultant
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
@@ -278,6 +300,7 @@ class  DatabaseManager:
         return listUsers
 
     def getallMembers(self):
+        '''Get all Members from the database.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
@@ -305,6 +328,7 @@ class  DatabaseManager:
 ################################################################################################
 # FETCHES here below
     def FetchMemberMobile(self, mobileNumber):
+        '''Get specific Mobile data of Member from the database.'''
         mobilenumber = self.encrypt_data(mobileNumber)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -320,6 +344,7 @@ class  DatabaseManager:
         return None
     
     def FetchMemberEmail(self, email):
+        '''Get specific Email data of Member from the database.'''
         eMail = self.security.decrypt_data(email)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -335,6 +360,7 @@ class  DatabaseManager:
         return None
     
     def FetchConsUsername(self, consusername):
+        '''Get specific Username data of Consultant from the database.'''
         name = self.encrypt_data(consusername)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -350,6 +376,7 @@ class  DatabaseManager:
         return None
     
     def FetchConsultantID(self, user):
+        '''Get specific ID data of Consultant from the database.'''
         username = self.encrypt_data(user.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -363,6 +390,7 @@ class  DatabaseManager:
         return id
     
     def FetchSystemAdminID(self, user):
+        '''Get specific ID data of SystemAdmin from the database.'''
         username = self.encrypt_data(user.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
@@ -377,6 +405,7 @@ class  DatabaseManager:
     
     def FetchAdminUsername(self, adminusername):
         name = self.encrypt_data(adminusername)
+        '''Get specific Username data of System Admin from the database.'''
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""

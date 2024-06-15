@@ -1,13 +1,10 @@
 import datetime    
 import random
 import re  
-import rsa     
-import hashlib     
-import os          
 
 class Validators:
     """Validation handler class, that handles the validation of inputs"""
-    #public functions
+    
     def create_id(sellf):
         """ Generates an unique ID based on certain criterias """
         current_datetime = datetime.datetime.now()
@@ -235,73 +232,4 @@ class Validators:
         if 12 <= len(password) <= 30:
             return True
         return False
-        
-
-# class EncryptionHandler:
-#     """Encryption handler class, that handles the encyrption/decryption of data"""
-#     public_keys, private_keys = rsa.newkeys(1024)
-#     public_path = "public.pem"
-#     private_path = "private.pem"
-
-
-#     def create_keys(self, file_path_public = public_path, file_path_private = private_path):
-#         if not os.path.exists(file_path_public):
-#             with open (file_path_public, "wb") as f:
-#                 f.write(self.public_keys.save_pkcs1("PEM"))
-
-#         if not os.path.exists(file_path_private):
-#             with open (file_path_private, "wb") as f:
-#                 f.write(self.private_keys.save_pkcs1("PEM"))
-
-#     def get_public_key(file_path = public_path):
-#         if os.path.exists(file_path):
-#             with open (file_path, "rb") as f:
-#                 public_key = rsa.PublicKey.load_pkcs1(f.read())
-#                 return public_key
-
-#     def get_private_key(file_path = private_path):
-#         if os.path.exists(file_path):
-#             with open (file_path, "rb") as f:
-#                 private_key = rsa.PrivateKey.load_pkcs1(f.read())
-#                 return private_key
-            
-
-#     def encrypt_data(data, public_key):
-#         encrypted_data = rsa.encrypt(data.encode(), public_key)
-#         return encrypted_data
-
-#     def decrypt_data(data, private_key):
-#         decrypted_data = rsa.decrypt(data, private_key)
-#         return decrypted_data.decode()        
-
-
-class HashHandler:
-    """Hash handler class, that handles the hashing of data"""
-
-    def hash_password(self, password):
-        """Returns a hashed password"""
-        hash_algortihm = hashlib.new("SHA256")
-        hash_algortihm.update(password.encode())
-        hashed_pass = hash_algortihm.hexdigest()
-        return hashed_pass
-
-
-class Logger:
-    """Logger class, that logs activities"""
-
-    log_date = ""
-    log_time = ""
-    log_username= ""
-    log_activity = ""
-    log_info=""
-    log_suspicion = ""
-
-    def create_log(self, date, time, username, activity, info, suspicion):
-        self.log_date = date
-        self.log_time = time
-        self.log_username = username
-        self.log_activity = activity
-        self.log_info = info
-        self.log_suspicion = suspicion
-        return self
         
