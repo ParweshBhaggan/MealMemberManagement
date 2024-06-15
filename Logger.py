@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 def log(username, description, additional_info="", suspicious="No"):
-    log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Log', 'Mealmembermanagement.log')
+    log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Mealmembermanagement.log')
     
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
     
@@ -34,7 +34,8 @@ def next_log_number(log_file):
 
 def logViewer():
         print('\nViewing log file')
-        log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Log\Mealmembermanagement.log')
+        log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Mealmembermanagement.log')
         with open(log_file, 'r') as f:
             logs = f.read()
             print(logs)
+        input("Press enter to continue")
