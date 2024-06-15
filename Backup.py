@@ -7,7 +7,7 @@ import zipfile
 class BackupSystem:
     def __init__(self):
         self.backup_folder = "Backupfolder"
-        self.backups = self.GetBackupFolders()
+       # self.backups = self.GetBackupFolders()
 
     def create_backup(self):
         count = 1

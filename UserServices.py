@@ -125,18 +125,7 @@ class UserServices:
             for user in ListUser:
                 print(user.firstname, user.lastname, user.username, user.password, user.registrationdate)
 
-    def CheckUsers(self):
-        # log('Cheking users...')
-        for admin in self.administrators:
-            pass
-            # log(f'{admin.firstname, admin.lastname, admin.username, admin.password, type(admin)}')
-        for consultant in self.consultants: 
-            pass
-            # log(f'{consultant.firstname, consultant.lastname, consultant.username, consultant.password, type(consultant)}')
-        for member in self.members:
-            pass
-            # log(f'{member.ID, member.firstname, member.lastname, member.username, member.password, member.registrationdate, member.age, member.gender, member.weight, member.adress, member.mobile}')
-
+   
     def CreateBackup(self):
         self.backup.create_backup()
         log(self.user.username, "Backup created.", "Backup created.")
@@ -146,5 +135,4 @@ class UserServices:
         log(self.user.username, f"Backup restored.", f"'{backup}' retrieved.")
 
     def GetBackups(self):
-        backup = BackupSystem()
-        return backup.backups
+        return self.backup.GetBackupFolders()
