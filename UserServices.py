@@ -1,3 +1,4 @@
+from Backup import BackupSystem
 from Logger import log
 from Database import DatabaseManager
 
@@ -5,6 +6,7 @@ class UserServices:
     def __init__(self, user):
         self.user = user
         self.databaseManager = DatabaseManager()
+        self.backup = BackupSystem()
 
     def UpdatePassword(self, newpassword):
         self.databaseManager.resetPassword(newpassword, self.user.username)
@@ -134,3 +136,15 @@ class UserServices:
         for member in self.members:
             pass
             # log(f'{member.ID, member.firstname, member.lastname, member.username, member.password, member.registrationdate, member.age, member.gender, member.weight, member.adress, member.mobile}')
+
+    def CreateBackup(self):
+        self.backup.create_backup()
+        log(self.user.username, "Backup created.", "Backup created.")
+
+    def RetrieveBackup(self, backup):
+        self.backup.restore(backup)
+        log(self.user.username, f"Backup restored.", f"'{backup}' retrieved.")
+
+    def GetBackups(self):
+        backup = BackupSystem()
+        return backup.backups
