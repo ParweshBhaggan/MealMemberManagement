@@ -468,19 +468,41 @@ class MenuForms:
         print("No User found\nGoing back..............")
         return
     
-    def UpdateOrDeleteForm(self):
+    def UpdateOrDeleteForm(self, *args):
         print("\n===================Updating or Deleting===================")
-        print("1 Update")
-        print("2 Delete")
-        print("3 Reset Password")
+        user = None
+        menu_items = None
+        if(len(args) > 0):
+            user = args[0]
+        if user.__class__.__name__ == "Member" and self.loggedInUser.typeUser == "Consultant":
+            menu_items = [
+                "Update Member"
+            ]
+        elif user.__class__.__name__ == "Member":
+            menu_items = [
+                "Update Member",
+                "Delete Member"
+            ]
+        else:
+            menu_items = [
+                "Update User",
+                "Delete User",
+                "Reset Password User"
+            ]
+        
+        index = 1
+        for item in menu_items:
+            print(f"{str(index)} {item}")
+            index+=1
+
         while True:
             try:
                 choice = int(self.InputOverride("Select Option: \n"))
-                if 1 <= choice <= 3:
+                if 1 <= choice <= len(menu_items):
                     return choice
                 else:
                     log(self.loggedInUser.username, "Input validation failure: Invalid number entered", "InputValidationFailure")
-                    mess = self.utilities.ConsoleMessage("Please select a number between 1 and 3.")
+                    mess = self.utilities.ConsoleMessage(f"Please select a number corresponding with the options given.")
                     print(mess)
             except ValueError:
                 log(self.loggedInUser.username, "Input validation failure: Invalid input entered", "InputValidationFailure")
