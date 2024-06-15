@@ -6,6 +6,7 @@ from Database import DatabaseManager
 
 
 class MenuFunctions:
+    '''This class handles the functions of interaction with Menu'''
     
     def __init__(self, logged_in_user):
         self.logged_in_user = logged_in_user
@@ -14,6 +15,7 @@ class MenuFunctions:
         
 
     def UserProfile(self):
+        '''Displays the logged in user profile'''
         if(self.logged_in_user.typeUser == "SuperAdmin"):
             print(f"Profile:\nUsername: {self.logged_in_user.username} \n")
         else:
@@ -28,6 +30,7 @@ class MenuFunctions:
 
 
     def SearchMember(self):
+        '''Searches specific Members and opens up a selection form to select the specific Member.'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search Member")
         searchTerm = self.menuForm.SearchTermForm()        
@@ -37,6 +40,7 @@ class MenuFunctions:
         return selectedMember
 
     def AddMember(self):
+        '''Opens up a memberform to add a Member'''
         member = self.menuForm.MemberForm()
         if(member is not None):
             self.logged_in_user.services.AddMember(member)
@@ -44,6 +48,7 @@ class MenuFunctions:
         return
 
     def UpdateMember(self, member = None):
+        '''Opens up a memberform to update a Member'''
         if(member is None):
             member = self.SearchMember()
         if(member is not None):
@@ -53,10 +58,12 @@ class MenuFunctions:
         return
 
     def UpdateCurrentPassword(self):
+        '''Opens up a password form to update current user's password'''
         newPass = self.menuForm.UpdatePasswordForm()
         self.logged_in_user.services.UpdatePassword(newPass)
 
     def DeleteMember(self, member = None):
+        '''Opens up a memberform to delete a Member'''
         if(member is None):
             member = self.SearchMember()
         if(member is not None):
@@ -67,11 +74,13 @@ class MenuFunctions:
         return
 
     def GetUsers(self):
+        '''Displays all the users.'''
         listUsers = self.logged_in_user.services.GetAllUsers()
         selectedUser = self.menuForm.SelectUserForm(listUsers)
         return selectedUser
     
     def SearchUser(self, *args):
+        '''Searches specific users and opens up a selection form to select the specific users.'''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Search User")
         searchTerm = self.menuForm.SearchTermForm()
@@ -90,6 +99,7 @@ class MenuFunctions:
         return selectedUser
 
     def AddConsultant(self):
+        '''Opens up a consultantform to add a Consultant'''
         consultant = self.menuForm.UserForm(Consultant())
         if(consultant is not None):
             self.logged_in_user.services.AddConsultant(consultant)
@@ -97,6 +107,7 @@ class MenuFunctions:
         return
 
     def UpdateConsultant(self, consultant = None):
+        '''Opens up a consultantform to Update a Consultant'''
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
@@ -107,6 +118,7 @@ class MenuFunctions:
         return
 
     def ResetConsultant(self, consultant = None):
+        '''Opens up a consultantform to reset password of a Consultant'''
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
@@ -116,6 +128,7 @@ class MenuFunctions:
         return
 
     def DeleteConsultant(self, consultant = None):
+        '''Opens up a consultantform to delete a Consultant'''
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
@@ -125,6 +138,7 @@ class MenuFunctions:
         return
 
     def AddAdmin(self):
+        '''Opens up a system admin form to add a System Admin'''
         systemAdmin = self.menuForm.UserForm(SystemAdmin())
         if(systemAdmin is not None):
             self.logged_in_user.services.AddAdmin(systemAdmin)
@@ -132,6 +146,7 @@ class MenuFunctions:
         return
 
     def UpdateAdmin(self, systemAdmin = None):
+        '''Opens up a system admin form to update a System Admin'''
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
@@ -143,6 +158,8 @@ class MenuFunctions:
         return
 
     def ResetAdmin(self, systemAdmin = None):
+        '''Opens up a system admin form to reset password of a System Admin'''
+
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
@@ -152,6 +169,7 @@ class MenuFunctions:
         return
 
     def DeleteAdmin(self, systemAdmin = None):
+        '''Opens up a system admin form to delete a System Admin'''
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
@@ -161,11 +179,13 @@ class MenuFunctions:
         return
 
     def CreateBackUp(self):
+        '''Opens up a backupform to create a back up'''
         if self.menuForm.CreateBackupForm():
             self.logged_in_user.services.CreateBackup()
         return
 
     def RetrieveBackup(self):
+        '''Opens up a retrieve backup form to retrieve a back up'''
         backups = self.logged_in_user.services.GetBackups()
         backup = self.menuForm.DisplayAndSelectBackups(backups)
         if self.menuForm.RetrieveBackupForm():
@@ -174,11 +194,13 @@ class MenuFunctions:
             self.utilities.SleepConsole(3)
         return
 
-    def SearchLog(self):
+    def ViewLog(self):
+        '''Displays the log in the console'''
         self.utilities.ClearConsole()
         logViewer()
 
     def LogOut(self, isUserLoggedIn):
+        '''Logs the current user out.'''
         isUserLoggedIn =  False
         mess = self.utilities.ConsoleMessage("Logging out...")
         print(mess)
@@ -186,26 +208,31 @@ class MenuFunctions:
         return isUserLoggedIn
     
     def CloseApplication(self):
+        '''Closes the current application'''
         self.utilities.QuitApplication()
         return
     
     def PrintMember(self, member):
+        '''Displays a Member to the console'''
         self.utilities.ClearConsole()
         self.menuForm.PrintMemberForm(member)
         self.utilities.SleepConsole(1.1)    
         return
     
     def PrintUser(self, user):
+        '''Displays a User to the console'''
         self.utilities.ClearConsole()
         self.menuForm.PrintUserForm(user)
         self.utilities.SleepConsole(1.1)    
         return
     
     def UpdateOrDelete(self, *args):
+        '''Opens up an update or delete form after searching for a specific Member/User'''
         return self.menuForm.UpdateOrDeleteForm(*args)
 
 
 class MenuController:
+    '''This handles how the menu is created,displayed and it's interaction.'''
     menuFunctions = None
 
     def __init__(self):
@@ -260,6 +287,7 @@ class MenuController:
     ]
 
     def CreateMenu(self, arr):
+        '''Creates a menu view for specific users'''
         self.menuFunctions.UserProfile()
         self.utilities.PrintMenuTitle("Menu")
         index = 1
@@ -270,11 +298,13 @@ class MenuController:
       
 
     def ViewConsultantMenu(self):
+        '''Display a menu view for Consultant'''
         self.utilities.ClearConsole()
         self.CreateMenu(self.consultantMenu)
         self.ConsultantMenuSelection(self.consultantMenu)
     
     def ConsultantMenuSelection(self, arr):
+        '''Creates the interactions of a menu view for Consultant'''
         index = 1
         for item in arr:
             index+=1
@@ -325,11 +355,15 @@ class MenuController:
 
     
     def ViewSystemAdminMenu(self):
+        '''Display a menu view for System Admin'''
+
         self.utilities.ClearConsole()
         self.CreateMenu(self.systemAdminMenu)
         self.SystemAdminMenuSelection(self.systemAdminMenu)
     
     def SystemAdminMenuSelection(self, arr):
+        '''Creates the interactions of a menu view for System Admin'''
+
         index = 1
         for item in arr:
             index+=1
@@ -398,7 +432,7 @@ class MenuController:
                     elif selectedOption == 12:
                         self.menuFunctions.RetrieveBackup()
                     elif selectedOption == 13:
-                        self.menuFunctions.SearchLog()
+                        self.menuFunctions.ViewLog()
                     elif selectedOption == 14:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
@@ -408,11 +442,13 @@ class MenuController:
                     self.ViewSystemAdminMenu()  
 
     def ViewSuperAdminMenu(self):
+        '''Display a menu view for Super Admin'''
         self.utilities.ClearConsole()
         self.CreateMenu(self.superAdminMenu)
         self.SuperAdminMenuSelection(self.superAdminMenu)
     
     def SuperAdminMenuSelection(self, arr):
+        '''Creates the interactions of a menu view for Super Admin'''
         
         index = 1
         for item in arr:
@@ -496,7 +532,7 @@ class MenuController:
                     elif selectedOption == 15:
                         self.menuFunctions.RetrieveBackup()
                     elif selectedOption == 16:
-                        self.menuFunctions.SearchLog()
+                        self.menuFunctions.ViewLog()
                     elif selectedOption == 17:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
@@ -506,6 +542,7 @@ class MenuController:
                     self.ViewSuperAdminMenu()
 
     def LoginMenu(self):
+        '''Displays the login menu '''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Login")
         print(self.utilities.ReturnMessage("Type 'close' in username to quit"))
@@ -566,6 +603,7 @@ class MenuController:
             self.LoginMenu()
 
     def ViewMenu(self):
+        '''Displays the menu of a specific User'''
         self.userLoggedIn = True
         self.menu = None
         if self.logged_in_user.typeUser == "SuperAdmin":
