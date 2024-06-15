@@ -1,4 +1,5 @@
 from datetime import datetime
+from Encryption import*
 import os
 
 def log(username, description, additional_info="", suspicious="No"):
@@ -15,7 +16,8 @@ def log(username, description, additional_info="", suspicious="No"):
     
     #create log message
     log_message = f'{log_number} {date} {time} {username} {description} {additional_info} {suspicious}\n'
-    
+    security = EncryptionHandler()
+    log_message = security.encrypt_data(log_message)
     #write log message to file
     with open(log_file, 'a') as file:
         if log_number == 1:
@@ -39,8 +41,10 @@ def next_log_number(log_file):
 def logViewer():
         '''Display the log in the console.'''
         print('\nViewing log file')
+        security = EncryptionHandler()
         log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Mealmembermanagement.log')
         with open(log_file, 'r') as f:
             logs = f.read()
+            logs = security.decrypt_data(logs)
             print(logs)
         input("Press enter to continue")

@@ -2,3 +2,5 @@ __pycache__*
 Mealmembermanagement.log
 MealMemberManagement.db
 *.zip
+private.pem
+public.pem
