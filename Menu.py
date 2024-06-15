@@ -114,7 +114,9 @@ class MenuFunctions:
             updateConId = self.logged_in_user.services.GetConsultantId(consultant)
             updatecons = self.menuForm.UpdateConsultantForm(consultant)
             self.logged_in_user.services.UpdateConsultant(updatecons, updateConId)
-        self.PrintUser(updatecons)
+            self.PrintUser(updatecons)
+            return
+        self.PrintUser(None)
         return
 
     def ResetConsultant(self, consultant = None):
@@ -124,7 +126,9 @@ class MenuFunctions:
         if(consultant is not None):
             resetcon = self.menuForm.ResetConsultantForm(consultant)
             self.logged_in_user.services.ResetConsultantPassword(resetcon)
-        self.PrintUser(resetcon)
+            self.PrintUser(resetcon)
+            return
+        self.PrintUser(None)
         return
 
     def DeleteConsultant(self, consultant = None):
@@ -154,7 +158,9 @@ class MenuFunctions:
             updateadmin = self.menuForm.UpdateAdminForm(systemAdmin)
             print(updateAdminId)
             self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
-        self.PrintUser(updateadmin)
+            self.PrintUser(updateadmin)
+            return
+        self.PrintUser(None)
         return
 
     def ResetAdmin(self, systemAdmin = None):
@@ -165,7 +171,9 @@ class MenuFunctions:
         if(systemAdmin is not None):
             resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
             self.logged_in_user.services.ResetAdminPassword(resetadmin)
-        self.PrintUser(resetadmin)
+            self.PrintUser(resetadmin)
+            return
+        self.PrintUser(None)
         return
 
     def DeleteAdmin(self, systemAdmin = None):

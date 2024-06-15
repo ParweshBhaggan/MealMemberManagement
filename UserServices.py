@@ -66,17 +66,17 @@ class UserServices:
     def AddMember(self, member):
         '''Service for adding a Member'''
         self.databaseManager.createMember(member)
-        log(self.user.username, f'New user: Member is created.', f'firstname: "{member.firstname}", lastname: "{member.lastname}')
+        log(self.user.username, f'New user: Member is created.', f'firstname: "{member.firstname}", lastname: "{member.lastname}"')
 
     def DeleteMember(self, member):
         '''Service for deleting a Member'''
         self.databaseManager.deleteMember(member)
-        log(self.user.username, f'User: Member is deleted.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname} is deleted')
+        log(self.user.username, f'User: Member is deleted.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname}" is deleted')
 
     def UpdateMember(self, member):
         '''Service for updating a Member'''
         self.databaseManager.updateMember(member)
-        log(self.user.username, f'User: Member is updated.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname} is updated')
+        log(self.user.username, f'User: Member is updated.', f'User: firstname: "{member.firstname}", lastname: "{member.lastname}" is updated')
     
     def SearchMembersRecursive(self, members, searchVal, foundMember=[], itemIndex=0):
         '''Service for searching a Member'''

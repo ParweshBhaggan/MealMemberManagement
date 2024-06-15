@@ -107,6 +107,7 @@ class  DatabaseManager:
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         # Encrypt sensitive data
+        encrypted_ID = self.security.encrypt_data(str(member.membershipID))
         encrypted_firstname = self.security.encrypt_data(member.firstname)
         encrypted_lastname = self.security.encrypt_data(member.lastname)
         encrypted_registrationdate = self.security.encrypt_data(str(member.registrationdate))
@@ -120,7 +121,7 @@ class  DatabaseManager:
         self.cur.execute("""
             INSERT INTO Member (membershipID, firstname, lastname, registrationdate, age, gender, weight, adress, email, mobile)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """, (member.membershipID, encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile))
+        """, (encrypted_ID, encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile))
         con.commit()
         con.close()
 
@@ -172,7 +173,6 @@ class  DatabaseManager:
         # Encrypt sensitive data
         encrypted_firstname = self.security.encrypt_data(member.firstname)
         encrypted_lastname = self.security.encrypt_data(member.lastname)
-        encrypted_registrationdate = self.security.encrypt_data(str(member.registrationdate))
         encrypted_age = self.security.encrypt_data(str(member.age))
         encrypted_gender = self.security.encrypt_data(member.gender)
         encrypted_adress = self.security.encrypt_data(member.adress)
@@ -183,7 +183,7 @@ class  DatabaseManager:
             UPDATE Member
             SET firstname = ?, lastname = ?, age = ?, gender = ?, weight = ?, adress = ?, email = ?, mobile = ?
             WHERE membershipID = ?;
-        """, (encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile, member.membershipID))
+        """, (encrypted_firstname,  encrypted_lastname, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile, member.membershipID))
         con.commit()
         con.close()
 
@@ -230,7 +230,7 @@ class  DatabaseManager:
         self.cur.execute("""
             UPDATE SystemAdmin
             SET password = ?
-            WHERE username = ?
+            WHERE username = ?;
         """, (password, name))
         con.commit()
         con.close()
@@ -244,7 +244,7 @@ class  DatabaseManager:
         self.cur.execute("""
             UPDATE Consultant
             SET password = ?
-            WHERE username = ?
+            WHERE username = ?;
         """, (password, username))
         con.commit()
         con.close()
@@ -258,7 +258,7 @@ class  DatabaseManager:
         self.cur.execute("""
             UPDATE SystemAdmin
             SET password = ?
-            WHERE username = ?
+            WHERE username = ?;
         """, (password, username))
         con.commit()
         con.close()
@@ -267,13 +267,12 @@ class  DatabaseManager:
 # DELETE here below
     def deleteMember(self, member):
         '''Delete Data: Member.'''
-        ID = self.security.encrypt_data(member.membershipID)
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
             DELETE FROM Member 
             WHERE membershipID = ?;
-        """, (ID,))
+        """, (member.membershipID,))
         con.commit()
         con.close()
 
@@ -284,7 +283,7 @@ class  DatabaseManager:
         self.cur = con.cursor()
         self.cur.execute("""
             DELETE FROM Consultant 
-            WHERE username = ?
+            WHERE username = ?;
         """, (username,))
         con.commit()
         con.close()
@@ -292,12 +291,12 @@ class  DatabaseManager:
 
     def deleteSystemAdmin(self,systemadmin):
         '''Delete Data: System Admin.'''
-        username = self.encrypt_data(systemadmin.username)
+        username = self.security.encrypt_data(systemadmin.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             DELETE FROM SystemAdmin 
-            WHERE username = ?
+            WHERE username = ?;
         """, (username,))
         con.commit()
         con.close()
@@ -364,7 +363,8 @@ class  DatabaseManager:
             decrypted_mobile = self.security.decrypt_data(mem[8])
             
             member = Member(decrypted_firstname, decrypted_lastname, decrypted_age, decrypted_gender, decrypted_weight, decrypted_address, decrypted_email, decrypted_mobile)
-            member.membershipID = decrypted_membershipID
+            # member.membershipID = decrypted_membershipID
+            member.membershipID = mem[0]
             listUsers.append(member)
         con.close()
         return listUsers
@@ -373,12 +373,12 @@ class  DatabaseManager:
 # FETCHES here below
     def FetchMemberMobile(self, mobileNumber):
         '''Get specific Mobile data of Member from the database.'''
-        mobilenumber = self.encrypt_data(mobileNumber)
+        mobilenumber = self.security.encrypt_data(str(mobileNumber))
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT mobile FROM Member
-            WHERE mobile = ?
+            WHERE mobile = ?;
         """, (mobilenumber,))
         mobile = self.cur.fetchone()
         con.commit()
@@ -389,12 +389,12 @@ class  DatabaseManager:
     
     def FetchMemberEmail(self, email):
         '''Get specific Email data of Member from the database.'''
-        eMail = self.security.decrypt_data(email)
+        eMail = self.security.encrypt_data(email)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT email FROM Member
-            WHERE email = ?
+            WHERE email = ?;
         """, (eMail,))
         mail = self.cur.fetchone()
         con.commit()
@@ -405,12 +405,12 @@ class  DatabaseManager:
     
     def FetchConsUsername(self, consusername):
         '''Get specific Username data of Consultant from the database.'''
-        name = self.encrypt_data(consusername)
+        name = self.security.encrypt_data(consusername)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT username FROM Consultant
-            WHERE username = ?
+            WHERE username = ?;
         """, (name,))
         username = self.cur.fetchone()
         con.commit()
@@ -421,12 +421,12 @@ class  DatabaseManager:
     
     def FetchConsultantID(self, user):
         '''Get specific ID data of Consultant from the database.'''
-        username = self.encrypt_data(user.username)
+        username = self.security.encrypt_data(user.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT id FROM Consultant
-            WHERE username = ?
+            WHERE username = ?;
         """, (username,))
         id = self.cur.fetchone()[0]
         con.commit()
@@ -435,12 +435,12 @@ class  DatabaseManager:
     
     def FetchSystemAdminID(self, user):
         '''Get specific ID data of SystemAdmin from the database.'''
-        username = self.encrypt_data(user.username)
+        username = self.security.encrypt_data(user.username)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT id FROM SystemAdmin
-            WHERE username = ?
+            WHERE username = ?;
         """, (username,))
         id = self.cur.fetchone()[0]
         con.commit()
@@ -448,13 +448,13 @@ class  DatabaseManager:
         return id
     
     def FetchAdminUsername(self, adminusername):
-        name = self.encrypt_data(adminusername)
+        name = self.security.encrypt_data(adminusername)
         '''Get specific Username data of System Admin from the database.'''
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             SELECT username FROM SystemAdmin
-            WHERE username = ?
+            WHERE username = ?;
         """, (name,))
         username = self.cur.fetchone()
         con.commit()
