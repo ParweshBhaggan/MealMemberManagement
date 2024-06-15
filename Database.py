@@ -1,6 +1,6 @@
 import sqlite3
 from Members import Member
-from Encryption import EncryptionHandler
+from Encryption import EncryptionHandler, HashHandler
 class  DatabaseManager:
     '''This class handles database actions.'''
     dbname = "MealMemberManagement.db" 
@@ -9,6 +9,7 @@ class  DatabaseManager:
         
         self.con = sqlite3.connect(self.dbname)
         self.security = EncryptionHandler() 
+        self.hash_handler = HashHandler()
         self.cur = self.con.cursor()
         self.CreateMemberTable()
         self.CreateSystemAdminTable()
@@ -105,10 +106,21 @@ class  DatabaseManager:
         '''Insert Data: Member.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
+        # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(member.firstname)
+        encrypted_lastname = self.security.encrypt_data(member.lastname)
+        encrypted_registrationdate = self.security.encrypt_data(str(member.registrationdate))
+        encrypted_age = self.security.encrypt_data(member.age)
+        encrypted_gender = self.security.encrypt_data(member.gender)
+        encrypted_adress = self.security.encrypt_data(member.adress)
+        encrypted_email = self.security.encrypt_data(member.email)
+        encrypted_weight = self.security.encrypt_data(member.weight)
+        encrypted_mobile = self.security.encrypt_data(member.mobile)
+        
         self.cur.execute("""
             INSERT INTO Member (membershipID, firstname, lastname, registrationdate, age, gender, weight, adress, email, mobile)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """, (member.membershipID, member.firstname, member.lastname, member.registrationdate, member.age, member.gender, member.weight, member.adress, member.email, member.mobile))
+        """, (member.membershipID, encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile))
         con.commit()
         con.close()
 
@@ -116,12 +128,19 @@ class  DatabaseManager:
         '''Insert Data: Consult.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
+        # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(user.firstname)
+        encrypted_lastname = self.security.encrypt_data(user.lastname)
+        encrypted_username = self.security.encrypt_data(user.username)
+        encrypted_registrationdate = self.security.encrypt_data(str(user.registrationdate))
+        
+        # Hash the password
+        hashed_password = self.hash_handler.hash_password(user.password)
         self.cur.execute("""
             INSERT INTO Consultant (firstname, lastname, username, password, registrationdate)
             VALUES (?, ?, ?, ?, ?);
-        """,
-        
-          (user.firstname, user.lastname, user.username, user.password, user.registrationdate))
+        """, (encrypted_firstname, encrypted_lastname, encrypted_username, hashed_password, encrypted_registrationdate))
+
         con.commit()
         con.close()
 
@@ -129,10 +148,18 @@ class  DatabaseManager:
         '''Insert Data: System Admin.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
+        # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(user.firstname)
+        encrypted_lastname = self.security.encrypt_data(user.lastname)
+        encrypted_username = self.security.encrypt_data(user.username)
+        encrypted_registrationdate = self.security.encrypt_data(str(user.registrationdate))
+        
+        # Hash the password
+        hashed_password = self.hash_handler.hash_password(user.password)
         self.cur.execute("""
             INSERT INTO SystemAdmin (firstname, lastname, username, password, registrationdate)
             VALUES (?, ?, ?, ?, ?);
-        """, (user.firstname, user.lastname, user.username, user.password, user.registrationdate))
+        """, (encrypted_firstname, encrypted_lastname , encrypted_username,hashed_password, encrypted_registrationdate))
         con.commit()
         con.close()
 
@@ -142,11 +169,21 @@ class  DatabaseManager:
         '''Update Data: Member.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
+        # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(member.firstname)
+        encrypted_lastname = self.security.encrypt_data(member.lastname)
+        encrypted_registrationdate = self.security.encrypt_data(str(member.registrationdate))
+        encrypted_age = self.security.encrypt_data(str(member.age))
+        encrypted_gender = self.security.encrypt_data(member.gender)
+        encrypted_adress = self.security.encrypt_data(member.adress)
+        encrypted_email = self.security.encrypt_data(member.email)
+        encrypted_weight = self.security.encrypt_data(str(member.weight))
+        encrypted_mobile = self.security.encrypt_data(member.mobile)
         self.cur.execute("""
             UPDATE Member
             SET firstname = ?, lastname = ?, age = ?, gender = ?, weight = ?, adress = ?, email = ?, mobile = ?
             WHERE membershipID = ?;
-        """, (member.firstname, member.lastname, member.age, member.gender, member.weight, member.adress, member.email, member.mobile, member.membershipID))
+        """, (encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile, member.membershipID))
         con.commit()
         con.close()
 
@@ -154,11 +191,15 @@ class  DatabaseManager:
         '''Update Data: Consultant.'''
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
+           # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(user.firstname)
+        encrypted_lastname = self.security.encrypt_data(user.lastname)
+        encrypted_username = self.security.encrypt_data(user.username)
         self.cur.execute("""
             UPDATE Consultant
             SET firstname = ?, lastname = ?, username = ?
             WHERE id = ?;
-        """, (user.firstname, user.lastname, user.username, id))
+        """, (   encrypted_firstname,  encrypted_lastname,  encrypted_username, id))
         con.commit()
         con.close()
 
@@ -166,11 +207,15 @@ class  DatabaseManager:
         '''Update Data: System Admin.'''
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
+        # Encrypt sensitive data
+        encrypted_firstname = self.security.encrypt_data(user.firstname)
+        encrypted_lastname = self.security.encrypt_data(user.lastname)
+        encrypted_username = self.security.encrypt_data(user.username)
         self.cur.execute("""
             UPDATE SystemAdmin
             SET firstname = ?, lastname = ?, username = ?
             WHERE id = ?;
-        """, (user.firstname, user.lastname, user.username, id))
+        """, (encrypted_firstname,  encrypted_lastname, encrypted_username , id))
         con.commit()
         con.close()
 
