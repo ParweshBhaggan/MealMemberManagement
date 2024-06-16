@@ -78,7 +78,7 @@ class  DatabaseManager:
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
 
-        if username == "1" and password == "1":# superadmin - Admin_123?
+        if username == "super_admin" and password == "Admin_123?":
             con.close()
             loggedInUser = SuperAdmin()
             return True, loggedInUser
