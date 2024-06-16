@@ -605,7 +605,7 @@ class MenuForms:
         print("Select a backup from the list below:")
         for index, backup in enumerate(backups, start=1):
             backup_path = os.path.join("Backupfolder", backup)
-            creation_time = datetime.fromtimestamp(os.path.getctime(backup_path)).strftime('%H:%M:%S')
+            creation_time = datetime.fromtimestamp(os.path.getctime(backup_path)).strftime('%Y-%m-%d %H:%M:%S')
             print(f"{index}. {backup} - Created: {creation_time}")
 
         while True:
