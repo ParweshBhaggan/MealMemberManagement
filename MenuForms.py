@@ -52,7 +52,7 @@ class MenuForms:
     def UserForm(self, user):
         '''The form for creating a new User'''
         self.utilities.ClearConsole()
-        self.utilities.PrintMenuTitle("User Form")
+        self.utilities.PrintMenuTitle(f"{user.typeUser} Form")
 
         log(self.loggedInUser.username, "Opening User Form", "UserForm")
 
