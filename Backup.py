@@ -51,13 +51,25 @@ class BackupSystem:
     def GetBackupFolders(self):
         '''Retrieve the list of backup folders in the backup folder.'''
         try:
+            # Check if the backup folder exists
+            if not os.path.exists(self.backup_folder):
+                print(f"The backup folder '{self.backup_folder}' does not exist.")
+                return []
+
+            # Retrieve the list of .zip files in the backup folder
             backups = []
             for f in os.listdir(self.backup_folder):
                 if f.endswith('.zip'):
                     backups.append(f)
+            
+            # Check if the backups list is empty
+            if not backups:
+                print("No backups available.")
+            
             return backups
-        except FileNotFoundError:
-            print(f"The backup folder '{self.backup_folder}' does not exist.")
+
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
             return []
 
 

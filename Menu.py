@@ -152,6 +152,7 @@ class MenuFunctions:
             if self.menuForm.DeleteUserForm(consultant):
                 self.logged_in_user.services.DeleteConsultant(consultant)
                 print(f"{consultant.typeUser}: {consultant.username} deleted")
+                self.utilities.SleepConsole(1.5)
             return
         self.PrintUser(None)
         return
@@ -205,6 +206,7 @@ class MenuFunctions:
             if self.menuForm.DeleteUserForm(systemAdmin):
                 self.logged_in_user.services.DeleteAdmin(systemAdmin)
                 print(f"{systemAdmin.typeUser}: {systemAdmin.username} deleted")
+                self.utilities.SleepConsole(1.5)
                 return
         self.PrintUser(None)
         return
@@ -218,11 +220,14 @@ class MenuFunctions:
     def RetrieveBackup(self):
         '''Opens up a retrieve backup form to retrieve a back up'''
         backups = self.logged_in_user.services.GetBackups()
-        backup = self.menuForm.DisplayAndSelectBackups(backups)
-        if self.menuForm.RetrieveBackupForm():
-            self.logged_in_user.services.RetrieveBackup(backup)
-            print(f"Backup '{backup}' restored successfully.")
-            self.utilities.SleepConsole(3)
+        if backups:
+            backup = self.menuForm.DisplayAndSelectBackups(backups)
+            if self.menuForm.RetrieveBackupForm():
+                self.logged_in_user.services.RetrieveBackup(backup)
+                print(f"Backup '{backup}' restored successfully.")
+                self.utilities.SleepConsole(3)
+                return
+        self.utilities.SleepConsole(3)
         return
 
     def ViewLog(self):

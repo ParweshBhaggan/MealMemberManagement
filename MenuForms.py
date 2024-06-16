@@ -72,7 +72,7 @@ class MenuForms:
         username = self.InputOverride("Enter Username: \n")
         while not self.validator.valid_username(username) or self.services.CheckUsername(name, username):
             log(self.loggedInUser.username, "Input validation failure: Invalid or duplicate username entered", "InputValidationFailure")
-            print("Invalid username. Username must be 8-12 characters long and can only contain letters, digits, underscores, apostrophes, and dots.")
+            # print("Invalid username. Username must be 8-12 characters long and can only contain letters, digits, underscores, apostrophes, and dots.")
             username = self.InputOverride("Enter Username again: \n")
 
         password = self.InputOverride("Enter Password: \n")
@@ -360,7 +360,7 @@ class MenuForms:
 
 
 
-    def SelectGender(self):
+    def SelectGender(self, oldgender = None):
         '''Handles the selection of gender section'''
         print("\nGender:\n")
         gender_options=['Male', 'Female', 'Other', 'Prefer Not To Say']
@@ -369,7 +369,14 @@ class MenuForms:
             print(f'{str(index)} {item}')
             index+=1
         
+        if oldgender:
+            print(f"Press Enter to skip and keep the current gender: {oldgender}")
+
         choice = self.InputOverride("Select gender: ")
+
+        if choice.strip() == "" and oldgender:
+            return oldgender
+        
         try:
             choice = int(choice)
         except ValueError:
@@ -408,7 +415,7 @@ class MenuForms:
             log(self.loggedInUser.username, "Input validation failure: Invalid age entered", "InputValidationFailure")
             age =  self.InputOverride("Invalid age. Please enter a valid age between 1 and 111: \n") or member.age
 
-        gender = self.SelectGender()
+        gender = self.SelectGender(member.gender)
 
         weight = self.InputOverride(f"Enter Weight (or enter to skip): \n") or member.weight
         while not self.validator.check_valid_weigth(weight):
@@ -477,7 +484,10 @@ class MenuForms:
     def PrintMemberForm(self, member):
         '''Displays a Member in the console'''
         if member is not None:
-            print("Membership ID: " + str(member.membershipID))
+            if member.decryptedID is None:
+                print("Membership ID: " + str(member.membershipID))
+            else:
+                print("Member ID: " + str(member.decryptedID))
             print("Firstname: " + member.firstname)
             print("Lastname: " + member.lastname)
             print("Age: " + str(member.age))
