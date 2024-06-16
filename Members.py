@@ -5,7 +5,7 @@ import Unique_Generator
 class Member:
     '''Class model of Member'''
     
-    def __init__(self, firstname, lastname, age, gender, weight, adress, email, mobile):
+    def __init__(self, firstname, lastname, age, gender, weight, adress, email, mobile, decryptedID = None):
         self.membershipID = Unique_Generator.generate()
         self.firstname = firstname
         self.lastname = lastname
@@ -16,4 +16,5 @@ class Member:
         self.email = email
         self.mobile = mobile
         self.registrationdate = date.today()
+        self.decryptedID = decryptedID
        

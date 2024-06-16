@@ -58,6 +58,7 @@ class UserServices:
     
     def UpdateConsultant(self, consultant, id):
         '''Service for updating a Consultant'''
+        
         self.databaseManager.updateConsultant(consultant, id)
         log(self.user.username, f'User: {consultant.typeUser} is updated.', f'User: "{consultant.username}"')
 
