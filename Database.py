@@ -46,6 +46,8 @@ class  DatabaseManager:
             lastname VARCHAR(255) NOT NULL,
             username VARCHAR(255) UNIQUE,
             password VARCHAR(255) NOT NULL,
+            userpassword VARCHAR(255) NOT NULL,
+            temp_pass INTEGER NOT NULL,
             registrationdate DATE NOT NULL
         )
     """)
@@ -60,6 +62,8 @@ class  DatabaseManager:
             lastname VARCHAR(255) NOT NULL,
             username VARCHAR(255) UNIQUE,
             password VARCHAR(255) NOT NULL,
+            userpassword VARCHAR(255) NOT NULL,
+            temp_pass INTEGER NOT NULL,
             registrationdate DATE NOT NULL
         )
     """)
@@ -67,6 +71,7 @@ class  DatabaseManager:
 ################################################################################################
 # LOGIN here below 
     def loginUser(self, username, password):
+        
         '''Login from the database.'''
         from User import Consultant, SuperAdmin, SystemAdmin
 
@@ -77,25 +82,31 @@ class  DatabaseManager:
             con.close()
             loggedInUser = SuperAdmin()
             return True, loggedInUser
-        username = self.security.encrypt_data(username)
-        self.cur.execute("SELECT * FROM SystemAdmin WHERE username = ? AND password = ?", (username, password))
+        passwordSafety = username+password
+        passwordSafety = self.hash_handler.hash_password(passwordSafety)
+        #self.cur.execute("SELECT * FROM SystemAdmin WHERE username = ? AND password = ?", (username, password))
+        self.cur.execute("SELECT * FROM SystemAdmin WHERE userpassword = ?", (passwordSafety,))
         user = self.cur.fetchone()
 
         if user:
-            loggedInUser = SystemAdmin(self.security.decrypt_data(user[1]), self.security.decrypt_data(user[2]), self.security.decrypt_data(user[3]), self.security.decrypt_data(user[4]))
-            loggedInUser.registrationdate = self.security.decrypt_data(user[5])
+            loggedInUser = SystemAdmin(self.security.decrypt_data(user[1]), self.security.decrypt_data(user[2]), self.security.decrypt_data(user[3]), password)
+            loggedInUser.id = user[0]
+            loggedInUser.temp_pass = user[6]
+            loggedInUser.registrationdate = self.security.decrypt_data(user[7])
             
             con.close()
             return True, loggedInUser
 
-        self.cur.execute("SELECT * FROM Consultant WHERE username = ? AND password = ?", (username, password))
+        self.cur.execute("SELECT * FROM Consultant WHERE userpassword = ?", (passwordSafety,))
         user = self.cur.fetchone()
 
         con.close()
 
         if user:
-            loggedInUser = Consultant(self.security.decrypt_data(user[1]), self.security.decrypt_data(user[2]), self.security.decrypt_data(user[3]), self.security.decrypt_data(user[4]))
-            loggedInUser.registrationdate = self.security.decrypt_data(user[5])
+            loggedInUser = Consultant(self.security.decrypt_data(user[1]), self.security.decrypt_data(user[2]), self.security.decrypt_data(user[3]), password)
+            loggedInUser.id = user[0]
+            loggedInUser.temp_pass = user[6]
+            loggedInUser.registrationdate = self.security.decrypt_data(user[7])
             return True, loggedInUser
         else:
             return False, None
@@ -107,7 +118,7 @@ class  DatabaseManager:
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         # Encrypt sensitive data
-        encrypted_ID = self.security.encrypt_data(str(member.membershipID))
+        #encrypted_ID = self.security.encrypt_data(str(member.membershipID))
         encrypted_firstname = self.security.encrypt_data(member.firstname)
         encrypted_lastname = self.security.encrypt_data(member.lastname)
         encrypted_registrationdate = self.security.encrypt_data(str(member.registrationdate))
@@ -121,7 +132,7 @@ class  DatabaseManager:
         self.cur.execute("""
             INSERT INTO Member (membershipID, firstname, lastname, registrationdate, age, gender, weight, adress, email, mobile)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """, (encrypted_ID, encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile))
+        """, (member.membershipID, encrypted_firstname,  encrypted_lastname , encrypted_registrationdate, encrypted_age,  encrypted_gender, encrypted_weight, encrypted_adress, encrypted_email,  encrypted_mobile))
         con.commit()
         con.close()
 
@@ -133,14 +144,16 @@ class  DatabaseManager:
         encrypted_firstname = self.security.encrypt_data(user.firstname)
         encrypted_lastname = self.security.encrypt_data(user.lastname)
         encrypted_username = self.security.encrypt_data(user.username)
+        encrypted_password = self.security.encrypt_data(user.password)
         encrypted_registrationdate = self.security.encrypt_data(str(user.registrationdate))
         
         # Hash the password
-        hashed_password = self.hash_handler.hash_password(user.password)
+        passwordSafety = user.username + user.password
+        hashed_password = self.hash_handler.hash_password(passwordSafety)
         self.cur.execute("""
-            INSERT INTO Consultant (firstname, lastname, username, password, registrationdate)
-            VALUES (?, ?, ?, ?, ?);
-        """, (encrypted_firstname, encrypted_lastname, encrypted_username, hashed_password, encrypted_registrationdate))
+            INSERT INTO Consultant (firstname, lastname, username, password,  userpassword, temp_pass, registrationdate)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        """, (encrypted_firstname, encrypted_lastname, encrypted_username, encrypted_password, hashed_password, user.temp_pass, encrypted_registrationdate))
 
         con.commit()
         con.close()
@@ -153,14 +166,16 @@ class  DatabaseManager:
         encrypted_firstname = self.security.encrypt_data(user.firstname)
         encrypted_lastname = self.security.encrypt_data(user.lastname)
         encrypted_username = self.security.encrypt_data(user.username)
+        encrypted_password = self.security.encrypt_data(user.password)
         encrypted_registrationdate = self.security.encrypt_data(str(user.registrationdate))
         
         # Hash the password
-        hashed_password = self.hash_handler.hash_password(user.password)
+        passwordSafety = user.username + user.password
+        hashed_password = self.hash_handler.hash_password(passwordSafety)
         self.cur.execute("""
-            INSERT INTO SystemAdmin (firstname, lastname, username, password, registrationdate)
-            VALUES (?, ?, ?, ?, ?);
-        """, (encrypted_firstname, encrypted_lastname , encrypted_username,hashed_password, encrypted_registrationdate))
+            INSERT INTO SystemAdmin (firstname, lastname, username, password, userpassword, temp_pass, registrationdate)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        """, (encrypted_firstname, encrypted_lastname , encrypted_username, encrypted_password ,hashed_password, user.temp_pass, encrypted_registrationdate))
         con.commit()
         con.close()
 
@@ -192,14 +207,17 @@ class  DatabaseManager:
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
            # Encrypt sensitive data
+        passwordSafety = user.username + user.password
+        hashed_password = self.hash_handler.hash_password(passwordSafety)
         encrypted_firstname = self.security.encrypt_data(user.firstname)
         encrypted_lastname = self.security.encrypt_data(user.lastname)
         encrypted_username = self.security.encrypt_data(user.username)
+        
         self.cur.execute("""
             UPDATE Consultant
-            SET firstname = ?, lastname = ?, username = ?
+            SET firstname = ?, lastname = ?, username = ?, userpassword = ?
             WHERE id = ?;
-        """, (   encrypted_firstname,  encrypted_lastname,  encrypted_username, id))
+        """, (   encrypted_firstname,  encrypted_lastname,  encrypted_username, hashed_password, id))
         con.commit()
         con.close()
 
@@ -208,58 +226,77 @@ class  DatabaseManager:
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         # Encrypt sensitive data
+        passwordSafety = user.username + user.password
+        hashed_password = self.hash_handler.hash_password(passwordSafety)
         encrypted_firstname = self.security.encrypt_data(user.firstname)
         encrypted_lastname = self.security.encrypt_data(user.lastname)
         encrypted_username = self.security.encrypt_data(user.username)
         self.cur.execute("""
             UPDATE SystemAdmin
-            SET firstname = ?, lastname = ?, username = ?
+            SET firstname = ?, lastname = ?, username = ?, password = ?
             WHERE id = ?;
-        """, (encrypted_firstname,  encrypted_lastname, encrypted_username , id))
+        """, (encrypted_firstname,  encrypted_lastname, encrypted_username, hashed_password , id))
         con.commit()
         con.close()
 
 ################################################################################################
 # RESET here below     
-    def resetPassword(self,newpassword, username):
-        '''Reset password of System Admin.'''
-        name = self.security.encrypt_data(username)
-        password = self.hash_handler.hash_password(newpassword)
+    def UpdatePasswordOwnSystemAdmin(self, systemadmin):
+        '''Updates own password of System Admin.'''
+        
+        password = self.security.encrypt_data(systemadmin.password)
+        hashed_password = self.hash_handler.hash_password(systemadmin.username + systemadmin.password)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             UPDATE SystemAdmin
-            SET password = ?
-            WHERE username = ?;
-        """, (password, name))
+            SET password = ?, userpassword = ?, temp_pass = ?
+            WHERE id = ?;
+        """, (password, hashed_password, 0, systemadmin.id))
+        con.commit()
+        con.close()
+    
+    def UpdatePasswordOwnConsultant(self, consultant):
+        '''Updates own password of Consultant.'''
+        
+        password = self.security.encrypt_data(consultant.password)
+        hashed_password = self.hash_handler.hash_password(consultant.username + consultant.password)
+        con = sqlite3.connect(self.dbname)
+        self.cur= con.cursor()
+        self.cur.execute("""
+            UPDATE Consultant
+            SET password = ?, userpassword = ?, temp_pass = ?
+            WHERE id = ?;
+        """, (password, hashed_password, 0, consultant.id))
         con.commit()
         con.close()
 
     def resetConsultantPassword(self, consultant):
         '''Reset password of Consultant.'''
-        username = self.security.encrypt_data(consultant.username)
-        password = self.hash_handler.hash_password(consultant.password)
+        password = self.security.encrypt_data(consultant.password)
+        hashed_password = self.hash_handler.hash_password(consultant.username + consultant.password)
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
             UPDATE Consultant
-            SET password = ?
-            WHERE username = ?;
-        """, (password, username))
+            SET password = ?, userpassword = ?, temp_pass = ?
+            WHERE id = ?;
+        """, (password, hashed_password, 1, consultant.id))
         con.commit()
         con.close()
 
-    def resetSystemAdminPassword(self,sytemadmin):
+    def resetSystemAdminPassword(self,systemadmin):
         '''Reset password of System Admin.'''
-        username = self.security.encrypt_data(sytemadmin.username)
-        password = self.hash_handler.hash_password(sytemadmin.password)
+        
+        password = self.security.encrypt_data(systemadmin.password)
+        hashed_password = self.hash_handler.hash_password(systemadmin.username + systemadmin.password)
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             UPDATE SystemAdmin
-            SET password = ?
-            WHERE username = ?;
-        """, (password, username))
+            SET password = ?, userpassword = ?, temp_pass = ?
+            WHERE id = ?;
+        """, (password, hashed_password, 1, systemadmin.id))
         con.commit()
         con.close()
 
@@ -278,26 +315,26 @@ class  DatabaseManager:
 
     def deleteConsultant(self, consultant):
         '''Delete Data: Consultant.'''
-        username = self.security.encrypt_data(consultant.username)
+       
         con = sqlite3.connect(self.dbname)
         self.cur = con.cursor()
         self.cur.execute("""
             DELETE FROM Consultant 
-            WHERE username = ?;
-        """, (username,))
+            WHERE id = ?;
+        """, (consultant.id,))
         con.commit()
         con.close()
 
 
     def deleteSystemAdmin(self,systemadmin):
         '''Delete Data: System Admin.'''
-        username = self.security.encrypt_data(systemadmin.username)
+        
         con = sqlite3.connect(self.dbname)
         self.cur= con.cursor()
         self.cur.execute("""
             DELETE FROM SystemAdmin 
-            WHERE username = ?;
-        """, (username,))
+            WHERE id = ?;
+        """, (systemadmin.id,))
         con.commit()
         con.close()
 
@@ -321,8 +358,8 @@ class  DatabaseManager:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
             decrypted_username = self.security.decrypt_data(res[3])
-            decrypted_password = res[4]
-            decrypted_registrationdate = self.security.decrypt_data(res[5])
+            decrypted_password = self.security.decrypt_data(res[4])
+            decrypted_registrationdate = self.security.decrypt_data(res[7])
             
             systemAdmin = SystemAdmin(decrypted_firstname, decrypted_lastname, decrypted_username, decrypted_password)
             systemAdmin.registrationdate = decrypted_registrationdate
@@ -333,8 +370,8 @@ class  DatabaseManager:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
             decrypted_username = self.security.decrypt_data(res[3])
-            decrypted_password = res[4]
-            decrypted_registrationdate = self.security.decrypt_data(res[5])
+            decrypted_password = self.security.decrypt_data(res[4])
+            decrypted_registrationdate = self.security.decrypt_data(res[7])
             
             
             consultant = Consultant(decrypted_firstname, decrypted_lastname, decrypted_username, decrypted_password)
@@ -356,7 +393,7 @@ class  DatabaseManager:
         listMems = self.cur.fetchall()
         listUsers = []
         for mem in listMems:
-            decrypted_membershipID = self.security.decrypt_data(mem[0])
+            #decrypted_membershipID = self.security.decrypt_data(mem[0])
             decrypted_firstname = self.security.decrypt_data(mem[1])
             decrypted_lastname = self.security.decrypt_data(mem[2])
             decrypted_age = self.security.decrypt_data(mem[3])
@@ -368,7 +405,7 @@ class  DatabaseManager:
             
             member = Member(decrypted_firstname, decrypted_lastname, decrypted_age, decrypted_gender, decrypted_weight, decrypted_address, decrypted_email, decrypted_mobile)
             # member.membershipID = decrypted_membershipID
-            member.membershipID = decrypted_membershipID
+            member.membershipID = mem[0]
             listUsers.append(member)
         con.close()
         return listUsers

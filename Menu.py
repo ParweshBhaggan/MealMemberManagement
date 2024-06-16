@@ -57,10 +57,24 @@ class MenuFunctions:
         self.PrintMember(member)
         return
 
-    def UpdateCurrentPassword(self):
+    def UpdateCurrentPasswordSystemAdmin(self):
         '''Opens up a password form to update current user's password'''
         newPass = self.menuForm.UpdatePasswordForm()
-        self.logged_in_user.services.UpdatePassword(newPass)
+        print("name: " + self.logged_in_user.username)
+        print("pass: " + self.logged_in_user.password)
+        print("id: " + str(self.logged_in_user.id))
+        self.utilities.SleepConsole(3)
+        self.logged_in_user.services.UpdatePasswordOwnSystemAdmin(self.logged_in_user,newPass)
+
+    def UpdateCurrentPasswordConsultant(self):
+        '''Opens up a password form to update current user's password'''
+        newPass = self.menuForm.UpdatePasswordForm()
+        print("name: " + self.logged_in_user.username)
+        print("pass: " + self.logged_in_user.password)
+        print("id: " + str(self.logged_in_user.id))
+        self.utilities.SleepConsole(3)
+        self.logged_in_user.services.UpdatePasswordOwnConsultant(self.logged_in_user,newPass)
+
 
     def DeleteMember(self, member = None):
         '''Opens up a memberform to delete a Member'''
@@ -126,9 +140,10 @@ class MenuFunctions:
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
-            resetcon = self.menuForm.ResetConsultantForm(consultant)
-            self.logged_in_user.services.ResetConsultantPassword(resetcon)
-            self.PrintUser(resetcon)
+            temp_pass = "TempPass123!"
+            consultant.password = temp_pass
+            self.logged_in_user.services.ResetConsultantPassword(consultant)
+            self.PrintUser(consultant)
             return
         self.PrintUser(None)
         return
@@ -173,9 +188,10 @@ class MenuFunctions:
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
-            resetadmin = self.menuForm.ResetAdminForm(systemAdmin)
-            self.logged_in_user.services.ResetAdminPassword(resetadmin)
-            self.PrintUser(resetadmin)
+            temp_pass = "TempPass123!"
+            systemAdmin.password = temp_pass
+            self.logged_in_user.services.ResetAdminPassword(systemAdmin)
+            self.PrintUser(systemAdmin)
             return
         self.PrintUser(None)
         return
@@ -358,7 +374,7 @@ class MenuController:
                     elif selectedOption == 3:
                         self.menuFunctions.UpdateMember()
                     elif selectedOption == 4:
-                        self.menuFunctions.UpdateCurrentPassword()
+                        self.menuFunctions.UpdateCurrentPasswordConsultant()
                     elif selectedOption == 5:
                         self.userLoggedIn = self.menuFunctions.LogOut(self.userLoggedIn)
                 else:
@@ -440,7 +456,7 @@ class MenuController:
                     elif selectedOption == 9:
                         self.menuFunctions.ResetConsultant()
                     elif selectedOption == 10:
-                        self.menuFunctions.UpdateCurrentPassword()
+                        self.menuFunctions.UpdateCurrentPasswordSystemAdmin()
                     elif selectedOption == 11:
                         self.menuFunctions.CreateBackUp()
                     elif selectedOption == 12:
@@ -587,6 +603,7 @@ class MenuController:
                 
                 self.menuFunctions = MenuFunctions(self.logged_in_user)
                 if self.logged_in_user.typeUser == "SuperAdmin":
+                    
                     success_message = self.utilities.SuccessMessage(f"\nLogin successful as Super Admin: {self.logged_in_user.username}")
                     print(success_message)
                     log(self.logged_in_user.username,"Logged in")
@@ -597,6 +614,11 @@ class MenuController:
                    
                 
                 if self.logged_in_user.typeUser == "SystemAdmin":
+                    if self.logged_in_user.temp_pass == 1:
+                        print(self.logged_in_user.temp_pass)
+                        self.utilities.SleepConsole(3)
+                        print("Your password was resetted please enter a new password.")
+                        self.menuFunctions.UpdateCurrentPasswordSystemAdmin()
                     print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
@@ -606,6 +628,11 @@ class MenuController:
                    
 
                 if self.logged_in_user.typeUser == "Consultant":
+                    if self.logged_in_user.temp_pass == 1:
+                        print(self.logged_in_user.temp_pass)
+                        self.utilities.SleepConsole(3)
+                        print("Your password was resetted please enter a new password.")
+                        self.menuFunctions.UpdateCurrentPasswordConsultant()
                     print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)

@@ -7,6 +7,7 @@ class User:
     '''The class model of User'''
     def __init__(self, *args):
         self.id = 0
+        self.temp_pass = 0
         if(len(args) > 2):
             self.firstname = args[0]
             self.lastname = args[1]

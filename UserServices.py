@@ -9,10 +9,18 @@ class UserServices:
         self.databaseManager = DatabaseManager()
         self.backup = BackupSystem()
 
-    def UpdatePassword(self, newpassword):
+    def UpdatePasswordOwnSystemAdmin(self, admin, newpassword):
         '''Service for updating password'''
-        self.databaseManager.resetPassword(newpassword, self.user.username)
+        admin.password = newpassword
+        self.databaseManager.UpdatePasswordOwnSystemAdmin(admin)
         log(self.user.username, f'Updated password.', f'{self.user.typeUser}: {self.user.username} changed his password')
+
+    def UpdatePasswordOwnConsultant(self, consultant, newpassword):
+        '''Service for updating password'''
+        consultant.password = newpassword
+        self.databaseManager.UpdatePasswordOwnConsultant(consultant)
+        log(self.user.username, f'Updated password.', f'{self.user.typeUser}: {self.user.username} changed his password')
+
 
     def GetAllUsers(self):
         '''Service for retrieving all Users'''
