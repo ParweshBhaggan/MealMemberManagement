@@ -233,7 +233,7 @@ class  DatabaseManager:
         encrypted_username = self.security.encrypt_data(user.username)
         self.cur.execute("""
             UPDATE SystemAdmin
-            SET firstname = ?, lastname = ?, username = ?, password = ?
+            SET firstname = ?, lastname = ?, username = ?, userpassword = ?
             WHERE id = ?;
         """, (encrypted_firstname,  encrypted_lastname, encrypted_username, hashed_password , id))
         con.commit()
@@ -354,6 +354,8 @@ class  DatabaseManager:
         """)
         listCons = self.cur.fetchall()
         listUsers = []
+
+    
         for res in listAdmins:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
@@ -365,7 +367,7 @@ class  DatabaseManager:
             systemAdmin.registrationdate = decrypted_registrationdate
             systemAdmin.id = res[0]
             listUsers.append(systemAdmin)
-        
+            
         for res in listCons:
             decrypted_firstname = self.security.decrypt_data(res[1])
             decrypted_lastname = self.security.decrypt_data(res[2])
@@ -379,6 +381,7 @@ class  DatabaseManager:
             consultant.id = res[0]
 
             listUsers.append(consultant)
+        
 
         con.close()
         return listUsers

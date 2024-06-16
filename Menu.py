@@ -170,9 +170,8 @@ class MenuFunctions:
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
-            updateAdminId = self.logged_in_user.services.GetSystemAdminId(systemAdmin)
+            updateAdminId = systemAdmin.id
             updateadmin = self.menuForm.UpdateAdminForm(systemAdmin)
-            print(updateAdminId)
             self.logged_in_user.services.UpdateAdmin(updateadmin, updateAdminId)
             self.PrintUser(updateadmin)
             return
