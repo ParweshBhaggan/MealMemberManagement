@@ -181,7 +181,7 @@ class Validators:
 
     def check_null_bytes(self, input_string):
         """Checks for null_bytes"""
-        if re.search(r'\x00', input_string):
+        if 'x00' in input_string:
             return True
         return False
 

@@ -23,16 +23,21 @@ class MenuForms:
         print()
         print(self.utilities.ReturnMessage("Type 'back' to return to Menu"))
         message = self.utilities.ConsoleMessage(message)
+        inputMessage = ""
         try:
-            message = input(f"{message}")
+            inputMessage = input(f"{message}")
+            if(self.validator.check_null_bytes(str(inputMessage))):
+                log(self.loggedInUser.username, "Entered Null Bytes", f"User tried to enter Null Bytes: {inputMessage}", "Yes")
+                return self.InputOverride(message)
+            
         except KeyboardInterrupt:
             print(self.utilities.ErrorMessage("Invalid key!"))
             return self.InputOverride(message)
-        if(message.lower() == "back"):
+        if(inputMessage.lower() == "back"):
             print(self.utilities.ConsoleMessage("Returning to Menu..."))
             self.utilities.SleepConsole(1.1)
             self.ReturnToHome()     
-        return message
+        return inputMessage
     
     def ReturnToHome(self):
         '''Function that navigates back to the home menu'''
@@ -43,7 +48,7 @@ class MenuForms:
         self.utilities.ClearConsole()
         self.menu.ViewMenu()
         return
-
+    
     def UserForm(self, user):
         '''The form for creating a new User'''
         self.utilities.ClearConsole()

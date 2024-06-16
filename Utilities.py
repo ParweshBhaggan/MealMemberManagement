@@ -1,3 +1,5 @@
+import random
+import string
 import sys
 import time
 import os
@@ -46,3 +48,44 @@ class Utilities:
         self.SleepConsole(1.1)
         self.ClearConsole()
         sys.exit()
+    
+    def GeneratePassword(self):
+        '''Generates a random password'''
+        lowercase_letters = string.ascii_lowercase
+        uppercase_letters = string.ascii_uppercase
+        digits = string.digits
+        special_characters = r"~!@#$%&_-+=`|\(){}[]:;'<>,.?/"  # Special characters
+
+        # Combine all character sets
+        all_characters = lowercase_letters + uppercase_letters + digits + special_characters
+
+        # Initialize flags to track if required characters are included
+        has_lowercase = False
+        has_uppercase = False
+        has_digit = False
+        has_special = False
+
+        # Generate password ensuring it meets the criteria
+        while True:
+            password = ''.join(random.sample(all_characters, random.randint(12, 30)))
+
+            # Check if password meets criteria
+            for char in password:
+                if char in lowercase_letters:
+                    has_lowercase = True
+                elif char in uppercase_letters:
+                    has_uppercase = True
+                elif char in digits:
+                    has_digit = True
+                elif char in special_characters:
+                    has_special = True
+
+            # Check if all criteria are met
+            if (has_lowercase and has_uppercase and has_digit and has_special):
+                return password
+
+            # Reset flags for next password generation attempt
+            has_lowercase = False
+            has_uppercase = False
+            has_digit = False
+            has_special = False

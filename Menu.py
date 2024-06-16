@@ -27,7 +27,7 @@ class MenuFunctions:
         print("===============================================================\n")    
 
 
-
+    
 
     def SearchMember(self):
         '''Searches specific Members and opens up a selection form to select the specific Member.'''
@@ -60,19 +60,11 @@ class MenuFunctions:
     def UpdateCurrentPasswordSystemAdmin(self):
         '''Opens up a password form to update current user's password'''
         newPass = self.menuForm.UpdatePasswordForm()
-        print("name: " + self.logged_in_user.username)
-        print("pass: " + self.logged_in_user.password)
-        print("id: " + str(self.logged_in_user.id))
-        self.utilities.SleepConsole(3)
         self.logged_in_user.services.UpdatePasswordOwnSystemAdmin(self.logged_in_user,newPass)
 
     def UpdateCurrentPasswordConsultant(self):
         '''Opens up a password form to update current user's password'''
         newPass = self.menuForm.UpdatePasswordForm()
-        print("name: " + self.logged_in_user.username)
-        print("pass: " + self.logged_in_user.password)
-        print("id: " + str(self.logged_in_user.id))
-        self.utilities.SleepConsole(3)
         self.logged_in_user.services.UpdatePasswordOwnConsultant(self.logged_in_user,newPass)
 
 
@@ -140,10 +132,14 @@ class MenuFunctions:
         if(consultant is None):
             consultant = self.SearchUser("Consultant")
         if(consultant is not None):
-            temp_pass = "TempPass123!"
+            temp_pass = self.utilities.GeneratePassword()
             consultant.password = temp_pass
             self.logged_in_user.services.ResetConsultantPassword(consultant)
             self.PrintUser(consultant)
+            print(f"Password for user {consultant.username} has been resetted!")
+            print(f"\nTemporary Password:\n{temp_pass}\n")
+            print("Copy the password")
+            input("Press any key to continue...\n")
             return
         self.PrintUser(None)
         return
@@ -188,10 +184,15 @@ class MenuFunctions:
         if(systemAdmin is None):
             systemAdmin = self.SearchUser("System Admin")
         if(systemAdmin is not None):
-            temp_pass = "TempPass123!"
+            temp_pass = self.utilities.GeneratePassword()
             systemAdmin.password = temp_pass
             self.logged_in_user.services.ResetAdminPassword(systemAdmin)
             self.PrintUser(systemAdmin)
+            print(f"Password for user {systemAdmin.username} has been resetted!")
+            print(f"\nTemporary Password:\n{temp_pass}\n")
+            print("Copy the password")
+            input("Press any key to continue...\n")
+            
             return
         self.PrintUser(None)
         return
@@ -571,11 +572,14 @@ class MenuController:
                     self.utilities.SleepConsole(1.1)
                     self.ViewSuperAdminMenu()
 
-    def LoginMenu(self):
+    def LoginMenu(self, *args):
         '''Displays the login menu '''
         self.utilities.ClearConsole()
         self.utilities.PrintMenuTitle("Login")
         print(self.utilities.ReturnMessage("Type 'close' in username to quit"))
+        attempts = 0
+        if(len(args) > 0):
+            attempts = args[0]
         
 
         try:
@@ -597,8 +601,21 @@ class MenuController:
             self.user_found, self.logged_in_user = self.dbMan.loginUser(username, password)
             if not self.user_found:
                 print(self.utilities.ErrorMessage("Invalid username or password. Please try again."))
+                log("None","Failed log in", f"Invalid username or password: Username: {username}, Password: {password}")
+                attempts += 1
+                if(attempts >= 3):
+                    log("None","Failed log in many times", f"Invalid username or password: Username: {username}, Password: {password}", "Yes")
+                    timer = 30
+                    print("You have tried many times to log in, please wait 30 seconds to continue")
+                    self.utilities.SleepConsole(1)
+                    timer -= 1
+                    while timer > 0:
+                        self.utilities.ClearConsole()
+                        print(f"Remaining time: {timer}")
+                        self.utilities.SleepConsole(1)
+                        timer-= 1
                 self.utilities.SleepConsole(1.1)
-                self.LoginMenu()
+                self.LoginMenu(attempts)
             else:
                 
                 self.menuFunctions = MenuFunctions(self.logged_in_user)
@@ -615,9 +632,8 @@ class MenuController:
                 
                 if self.logged_in_user.typeUser == "SystemAdmin":
                     if self.logged_in_user.temp_pass == 1:
-                        print(self.logged_in_user.temp_pass)
-                        self.utilities.SleepConsole(3)
                         print("Your password was resetted please enter a new password.")
+                        self.utilities.SleepConsole(2)
                         self.menuFunctions.UpdateCurrentPasswordSystemAdmin()
                     print(f"\nLogin successful as Administrator: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
@@ -629,14 +645,12 @@ class MenuController:
 
                 if self.logged_in_user.typeUser == "Consultant":
                     if self.logged_in_user.temp_pass == 1:
-                        print(self.logged_in_user.temp_pass)
-                        self.utilities.SleepConsole(3)
                         print("Your password was resetted please enter a new password.")
+                        self.utilities.SleepConsole(2)
                         self.menuFunctions.UpdateCurrentPasswordConsultant()
                     print(f"\nLogin successful as Consultant: {self.logged_in_user.username}")
                     log(self.logged_in_user.username,"Logged in")
                     self.utilities.SleepConsole(1.1)
-
                     self.ViewMenu()
                    
         else:
@@ -660,3 +674,4 @@ class MenuController:
                 self.logged_in_user = None
                 self.LoginMenu()
                 break  
+
